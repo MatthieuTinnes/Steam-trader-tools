@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXListView?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import com.jfoenix.controls.JFXToolbar?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <JFXListView fx:id="listResult" layoutX="113.0" layoutY="124.0" prefHeight="198.0" prefWidth="400.0" stylesheets="@style.css" />
+      <JFXButton contentDisplay="GRAPHIC_ONLY" layoutX="368.0" layoutY="99.0" stylesheets="@style.css" text="Button" />
+      <JFXToolbar layoutX="113.0" layoutY="69.0" prefHeight="30.0" prefWidth="400.0" styleClass="toolbar" stylesheets="@style.css">
+         <center>
+            <JFXTextField fx:id="searchText" focusColor="WHITE" onKeyReleased="#search" promptText="%gamesearchprompt" style="-fx-text-fill: #FFFFFF;" unFocusColor="#ffffff00" BorderPane.alignment="CENTER" />
+         </center>
+         <right>
+            <JFXButton buttonType="RAISED" contentDisplay="GRAPHIC_ONLY" onAction="#search" ripplerFill="WHITE" BorderPane.alignment="CENTER">
+               <graphic>
+                  <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../bundles/images/magnify.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </JFXButton>
+         </right>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <padding>
+            <Insets left="10.0" />
+         </padding>
+      </JFXToolbar>
+      <Label layoutX="240.0" layoutY="14.0" text="%addgame">
+         <font>
+            <Font size="29.0" />
+         </font>
+      </Label>
+      <JFXButton buttonType="RAISED" layoutX="254.0" layoutY="335.0" onAction="#addGame" prefHeight="43.0" prefWidth="119.0" style="-fx-background-color: #303F9F;" text="%add" textFill="WHITE">
+         <font>
+            <Font size="17.0" />
+         </font>
+      </JFXButton>
+      <JFXButton fx:id="refreshListButton" buttonType="RAISED" layoutX="8.0" layoutY="67.0" onAction="#refreshAllAppList" prefHeight="43.0" prefWidth="94.0" ripplerFill="WHITE" styleClass="blue-button" stylesheets="@style.css" text="%refreshsteamlist" textAlignment="CENTER" wrapText="true" />
+   </children>
+</AnchorPane>
