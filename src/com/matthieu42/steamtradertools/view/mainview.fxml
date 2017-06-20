@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXListView?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+   <left>
+      <JFXListView fx:id="appList" cellVerticalMargin="2.0" depth="2" fixedCellSize="30.0" focusTraversable="false" onMouseClicked="#selectedGameInfo" onMousePressed="#selectedGameInfo" prefHeight="520.0" prefWidth="292.0" snapToPixel="false" stylesheets="@style.css">
+         <BorderPane.margin>
+            <Insets />
+         </BorderPane.margin>
+      </JFXListView>
+   </left>
+   <top>
+      <AnchorPane prefHeight="76.0" prefWidth="1100.0" style="-fx-background-color: #3F51B5;" stylesheets="@style.css" BorderPane.alignment="CENTER">
+         <children>
+            <MenuBar fx:id="menubar" onMouseDragged="#moveWindows" onMousePressed="#moveWindowsRecorder" prefHeight="22.0" prefWidth="1100.0" style="-fx-background-color: #303F9F;" stylesheets="@style.css">
+              <menus>
+                <Menu mnemonicParsing="false" text="%file">
+                  <items>
+                    <MenuItem mnemonicParsing="false" onAction="#saveAppListToXml" style="-fx-text-fill: black;" text="%save" />
+                        <MenuItem mnemonicParsing="false" onAction="#saveNewAppListToXml" style="-fx-text-fill: black;" text="%saveas" />
+                        <MenuItem mnemonicParsing="false" onAction="#loadAppListFromXml" style="-fx-text-fill: black;" text="%load" />
+                        <MenuItem mnemonicParsing="false" onAction="#importFromCsv" style="-fx-text-fill: black;" text="%import" />
+                  </items>
+                </Menu>
+                  <Menu mnemonicParsing="false" text="%edit">
+                     <items>
+                        <MenuItem mnemonicParsing="false" onAction="#openSettings" style="-fx-text-fill: black;" text="%settings" />
+                     </items></Menu>
+              </menus>
+            </MenuBar>
+            <ButtonBar fx:id="windowsButton" buttonMinWidth="30.0" layoutX="966.0" prefHeight="26.0" prefWidth="134.0">
+              <buttons>
+                  <JFXButton id="minimizeButton" alignment="TOP_CENTER" buttonType="RAISED" cache="true" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" minWidth="0.0" onAction="#minimize" prefHeight="7.0" prefWidth="30.0" ripplerFill="WHITE" stylesheets="@style.css">
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <padding>
+                        <Insets bottom="1.0" top="1.0" />
+                     </padding>
+                  </JFXButton>
+                  <JFXButton id="maximizeButton" alignment="TOP_CENTER" buttonType="RAISED" cache="true" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" layoutX="180.0" layoutY="10.0" minWidth="0.0" onAction="#maximize" prefHeight="7.0" prefWidth="30.0" ripplerFill="WHITE" stylesheets="@style.css">
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <padding>
+                        <Insets bottom="1.0" top="1.0" />
+                     </padding>
+                  </JFXButton>
+                  <JFXButton id="closeButton" alignment="TOP_CENTER" buttonType="RAISED" cache="true" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" layoutX="180.0" layoutY="10.0" minWidth="0.0" onAction="#close" prefHeight="7.0" prefWidth="30.0" ripplerFill="WHITE" stylesheets="@style.css">
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <padding>
+                        <Insets bottom="1.0" top="1.0" />
+                     </padding>
+                  </JFXButton>
+              </buttons>
+            </ButtonBar>
+            <JFXTextField fx:id="searchText" layoutX="25.0" layoutY="35.0" onKeyReleased="#searchApp" prefHeight="25.0" prefWidth="198.0" promptText="%search" styleClass="textArea" stylesheets="@style.css" unFocusColor="WHITE" />
+            <JFXButton id="deleteButton" buttonType="RAISED" contentDisplay="GRAPHIC_ONLY" layoutX="223.0" layoutY="31.0" onAction="#deleteApp" ripplerFill="WHITE" stylesheets="@style.css" text="Button" />
+            <JFXButton fx:id="searchButton" buttonType="RAISED" contentDisplay="GRAPHIC_ONLY" layoutX="183.0" layoutY="32.0" onAction="#handleSearchAction" ripplerFill="WHITE">
+               <graphic>
+                  <ImageView fx:id="searchGraphic" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../bundles/images/magnify.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </JFXButton>
+         </children>
+      </AnchorPane>
+   </top>
+   <bottom>
+      <AnchorPane fx:id="footer" prefHeight="33.0" prefWidth="1100.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label fx:id="gameNumber" layoutX="14.0" layoutY="6.0" text="%gamenumber" />
+            <Label fx:id="keyNumber" layoutX="149.0" layoutY="6.0" text="%keynumber" />
+         </children>
+      </AnchorPane>
+   </bottom>
+   <center>
+      <StackPane BorderPane.alignment="CENTER">
+         <children>
+            <TableView fx:id="keyList" disable="true" editable="true" maxHeight="-Infinity" prefHeight="323.0" prefWidth="808.0" stylesheets="@style.css" visible="false" StackPane.alignment="BOTTOM_CENTER">
+              <columns>
+                <TableColumn fx:id="key" prefWidth="208.0" text="%key" />
+                  <TableColumn fx:id="used" prefWidth="90.0" text="%keyused" />
+                  <TableColumn fx:id="dateAdded" editable="false" prefWidth="140.0" text="%dateadded" />
+                <TableColumn fx:id="state" prefWidth="180.0" text="%state" />
+                  <TableColumn fx:id="currentUse" prefWidth="175.0" text="%currentuse" />
+              </columns>
+               <StackPane.margin>
+                  <Insets />
+               </StackPane.margin>
+            </TableView>
+            <JFXButton fx:id="addGameButton" buttonType="RAISED" contentDisplay="GRAPHIC_ONLY" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#addApp" prefHeight="50.0" prefWidth="50.0" ripplerFill="WHITE" style="-fx-background-color: FF4081; -fx-background-radius: 70;" StackPane.alignment="BOTTOM_RIGHT">
+               <graphic>
+                  <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../bundles/images/plus.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <StackPane.margin>
+                  <Insets bottom="20.0" right="20.0" />
+               </StackPane.margin>
+            </JFXButton>
+            <ImageView fx:id="gameBanner" fitHeight="184.0" fitWidth="431.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="TOP_CENTER">
+               <StackPane.margin>
+                  <Insets />
+               </StackPane.margin>
+            </ImageView>
+            <Label fx:id="gameInfoLabel" disable="true" text="%gameinfo" visible="false" StackPane.alignment="TOP_LEFT">
+               <StackPane.margin>
+                  <Insets left="20.0" top="10.0" />
+               </StackPane.margin>
+               <font>
+                  <Font name="System Bold" size="17.0" />
+               </font></Label>
+            <Label fx:id="linksLabel" disable="true" text="%links" visible="false" StackPane.alignment="TOP_RIGHT">
+               <StackPane.margin>
+                  <Insets right="20.0" top="10.0" />
+               </StackPane.margin>
+               <font>
+                  <Font name="System Bold" size="17.0" />
+               </font></Label>
+            <ToolBar fx:id="toolbar" disable="true" prefHeight="39.0" prefWidth="808.0" style="-fx-background-color: #3F51B5;" stylesheets="@style.css" visible="false">
+              <items>
+                  <JFXButton accessibleHelp="%copyclipboard" accessibleText="%copyclipboard" buttonType="RAISED" contentDisplay="GRAPHIC_ONLY" onAction="#adSteamKey" prefHeight="38.0" prefWidth="38.0" ripplerFill="WHITE" text="Button" textFill="WHITE" wrapText="true">
+                     <graphic>
+                        <ImageView accessibleText="%copyclipboard" fitHeight="33.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../bundles/images/plus-circle-outline.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </JFXButton>
+                  <JFXButton accessibleHelp="%copyclipboard" accessibleText="%copyclipboard" buttonType="RAISED" contentDisplay="GRAPHIC_ONLY" onAction="#copyKeyToClipBoard" prefHeight="38.0" prefWidth="38.0" ripplerFill="WHITE" text="Button" textFill="WHITE" wrapText="true">
+                     <graphic>
+                        <ImageView accessibleText="%copyclipboard" fitHeight="33.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../bundles/images/content-copy.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </JFXButton>
+                  <JFXButton accessibleHelp="%delete" accessibleText="%delete" buttonType="RAISED" contentDisplay="GRAPHIC_ONLY" onAction="#deleteSteamKey" prefHeight="38.0" prefWidth="38.0" ripplerFill="WHITE" stylesheets="@style.css" textFill="WHITE">
+                     <graphic>
+                        <ImageView fitHeight="33.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../bundles/images/delete.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </JFXButton>
+              </items>
+               <StackPane.margin>
+                  <Insets bottom="103.0" />
+               </StackPane.margin>
+            </ToolBar>
+            <Label fx:id="titlePriceLabel" disable="true" text="%price" visible="false" StackPane.alignment="TOP_LEFT">
+               <StackPane.margin>
+                  <Insets left="8.0" top="45.0" />
+               </StackPane.margin>
+            </Label>
+            <Label fx:id="titleCardLabel" disable="true" layoutX="18.0" layoutY="50.0" text="%tradingcards" visible="false" StackPane.alignment="TOP_LEFT">
+               <StackPane.margin>
+                  <Insets left="8.0" top="70.0" />
+               </StackPane.margin>
+            </Label>
+            <Label fx:id="titleAchievementsLabel" disable="true" layoutX="18.0" layoutY="70.0" text="%achievements" visible="false" StackPane.alignment="TOP_LEFT">
+               <StackPane.margin>
+                  <Insets left="8.0" top="95.0" />
+               </StackPane.margin>
+            </Label>
+            <Label fx:id="achievementsLabel" StackPane.alignment="TOP_LEFT">
+               <StackPane.margin>
+                  <Insets left="110.0" top="95.0" />
+               </StackPane.margin>
+            </Label>
+            <Label fx:id="cardLabel" layoutX="400.0" layoutY="297.0" StackPane.alignment="TOP_LEFT">
+               <StackPane.margin>
+                  <Insets left="110.0" top="70.0" />
+               </StackPane.margin>
+            </Label>
+            <Label fx:id="priceLabel" layoutX="400.0" layoutY="297.0" StackPane.alignment="TOP_LEFT">
+               <StackPane.margin>
+                  <Insets left="110.0" top="45.0" />
+               </StackPane.margin>
+            </Label>
+            <Label fx:id="steamLabel" disable="true" layoutX="687.0" layoutY="105.0" text="Steam" visible="false" StackPane.alignment="TOP_RIGHT">
+               <graphic>
+                  <Hyperlink fx:id="steamLink" contentDisplay="GRAPHIC_ONLY" onAction="#openLink">
+                     <graphic>
+                        <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../bundles/images/store_steampowered_com.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Hyperlink>
+               </graphic>
+               <StackPane.margin>
+                  <Insets right="70.0" top="45.0" />
+               </StackPane.margin>
+            </Label>
+            <Label fx:id="steamDbLabel" disable="true" text="SteamDB" visible="false" StackPane.alignment="TOP_RIGHT">
+               <graphic>
+                  <Hyperlink fx:id="steamDBLink" contentDisplay="GRAPHIC_ONLY" onAction="#openLink">
+                     <graphic>
+                        <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../bundles/images/steamdb.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Hyperlink>
+               </graphic>
+               <StackPane.margin>
+                  <Insets right="55.0" top="70.0" />
+               </StackPane.margin>
+            </Label>
+            <Label fx:id="itadLabel" disable="true" text="IsThereAnyDeal" visible="false" StackPane.alignment="TOP_RIGHT">
+               <graphic>
+                  <Hyperlink fx:id="isThereAnyDealLink" contentDisplay="GRAPHIC_ONLY" onAction="#openLink">
+                     <graphic>
+                        <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../bundles/images/itad.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Hyperlink>
+               </graphic>
+               <StackPane.margin>
+                  <Insets right="21.0" top="95.0" />
+               </StackPane.margin>
+            </Label>
+         </children>
+      </StackPane>
+   </center>
+</BorderPane>
