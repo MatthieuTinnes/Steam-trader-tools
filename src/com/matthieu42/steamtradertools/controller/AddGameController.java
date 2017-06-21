@@ -15,11 +15,14 @@ import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
@@ -37,12 +40,6 @@ public class AddGameController implements Initializable
         private JFXButton refreshListButton;
         @FXML
         private JFXButton addLinkedGameButton;
-        @FXML
-        private JFXComboBox<AppType> typeChoiceBox;
-        @FXML
-        private JFXButton addNotLinkedGameButton;
-        @FXML
-        private JFXTextField notLinkedAppName;
 
         private final AllAppList allAppList;
         private final UserAppList userAppList;
@@ -62,7 +59,6 @@ public class AddGameController implements Initializable
     {
         setAppNameList();
         listResult.setItems(FXCollections.observableArrayList(currentAppList));
-        typeChoiceBox.setItems(FXCollections.observableArrayList(AppType.values()));
     }
 
     @FXML
@@ -134,13 +130,6 @@ public class AddGameController implements Initializable
 
 
     }
-    @FXML
-    void addNotLinkedGame(ActionEvent event) {
-        if(notLinkedAppName.getText().isEmpty()){
-            return;
-        }
-
-    }
 
     @FXML
     void refreshAllAppList(ActionEvent event)
@@ -175,6 +164,21 @@ public class AddGameController implements Initializable
     private void setAppNameList(){
         currentAppList.addAll(allAppList.getAppNameList());
     }
+    @FXML
+    void openAddCustomGame(ActionEvent event) throws IOException
+    {
+        Stage stage = new Stage();
+        ResourceBundle bundle = I18n.getResourceBundle();
+        AddCustomGameController addCustomGameController = new AddCustomGameController(userAppList, controllerBinder);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/matthieu42/steamtradertools/view/addcustomgameview.fxml"), bundle);
+        loader.setController(addCustomGameController);
+        AnchorPane root = loader.load();
+        Scene addGameScene = new Scene(root);
+        String css = AppController.class.getResource("/com/matthieu42/steamtradertools/view/style.css").toExternalForm();
+        addGameScene.getStylesheets().add(css);
+        stage.setScene(addGameScene);
+        stage.show();
 
+    }
 
 }

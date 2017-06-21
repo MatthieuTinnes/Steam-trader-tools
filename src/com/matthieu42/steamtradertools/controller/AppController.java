@@ -262,11 +262,31 @@ public class AppController implements Initializable
             steamLink.setText(app.getSteamDBLink());
             isThereAnyDealLink.setText(app.getItadLink());
         }
-        else if(appSelected instanceof NotLinkedSteamAppWithKey){
+        else if(appSelected instanceof NotLinkedSteamAppWithKey)
+        {
+            NotLinkedSteamAppWithKey selectedApp = (NotLinkedSteamAppWithKey) appSelected;
+            ArrayList<Node> nodeList = new ArrayList<>();
+            nodeList.addAll(Arrays.asList(gameBanner, keyList, toolbar, gameInfoLabel, linksLabel, priceLabel, cardLabel, achievementsLabel, titleAchievementsLabel, titleCardLabel, titlePriceLabel, steamLabel, steamDbLabel, itadLabel));
+            for (Node n : nodeList)
+            {
+                n.setVisible(false);
+                n.setDisable(true);
+            }
+            noGameSelected = true;
+            gameBanner.setImage(new Image("/com/matthieu42/steamtradertools/bundles/images/notLinkedLogo.png"));
+            keyList.setItems(FXCollections.observableArrayList(appSelected.getSteamKeyList()));
+            gameBanner.setVisible(true);
+            gameBanner.setDisable(false);
+            toolbar.setVisible(true);
+            toolbar.setDisable(false);
+            keyList.setVisible(true);
+            keyList.setDisable(false);
+        }
+
 
         }
 
-    }
+
 
     public void addControllerBinder(ControllerBinder controller)
     {

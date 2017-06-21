@@ -7,8 +7,12 @@ public class NotLinkedSteamAppWithKey extends  AbstractSteamAppWithKey
 {
     private AppType appType;
 
-    public NotLinkedSteamAppWithKey(String name){
+    public NotLinkedSteamAppWithKey(){
+
+    }
+    public NotLinkedSteamAppWithKey(String name, AppType type){
         this.name = name;
+        this.appType = type;
     }
 
 }
