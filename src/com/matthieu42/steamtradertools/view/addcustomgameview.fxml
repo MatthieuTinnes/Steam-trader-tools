@@ -1,25 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
-<?import com.jfoenix.controls.JFXComboBox?>
 <?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="368.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="316.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Label layoutX="212.0" layoutY="35.0" text="%addCustomGame">
+      <Label layoutX="224.0" layoutY="35.0" text="%addCustomGame">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <JFXTextField fx:id="notLinkedAppName" layoutX="273.0" layoutY="121.0" />
-      <Label layoutX="172.0" layoutY="125.0" text="%name" />
-      <Label layoutX="173.0" layoutY="212.0" text="%type" />
-      <JFXComboBox fx:id="typeChoiceBox" layoutX="271.0" layoutY="199.0" prefHeight="25.0" prefWidth="135.0" />
-      <JFXButton fx:id="addNotLinkedGameButton" buttonType="RAISED" layoutX="241.0" layoutY="291.0" onAction="#addNotLinkedGame" prefHeight="43.0" prefWidth="119.0" style="-fx-background-color: #303F9F;" text="%add" textFill="WHITE">
+      <JFXTextField fx:id="notLinkedAppName" layoutX="233.0" layoutY="121.0" />
+      <Label layoutX="155.0" layoutY="125.0" text="%name" />
+      <JFXButton fx:id="addNotLinkedGameButton" buttonType="RAISED" layoutX="241.0" layoutY="229.0" onAction="#addNotLinkedGame" prefHeight="43.0" prefWidth="119.0" style="-fx-background-color: #303F9F;" text="%add" textFill="WHITE">
          <font>
             <Font size="17.0" />
          </font>

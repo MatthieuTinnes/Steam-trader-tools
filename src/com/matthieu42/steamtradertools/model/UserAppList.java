@@ -1,9 +1,10 @@
 package com.matthieu42.steamtradertools.model;
 
-import com.github.goive.steamapi.data.SteamApp;
+
 import com.github.goive.steamapi.exceptions.SteamApiException;
 import com.matthieu42.steamtradertools.model.steamapp.AbstractSteamAppWithKey;
 import com.matthieu42.steamtradertools.model.steamapp.LinkedSteamAppWithKey;
+import com.matthieu42.steamtradertools.model.steamapp.NotLinkedSteamAppWithKey;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -117,17 +118,10 @@ public class UserAppList
             TreeSet<AbstractSteamAppWithKey> appList = new TreeSet<>();
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(";");
-                LinkedSteamAppWithKey newApp = new LinkedSteamAppWithKey(Integer.parseInt(values[0]));
+                AbstractSteamAppWithKey newApp = new NotLinkedSteamAppWithKey(values[0]);
                 appList.add(newApp);
-                try
-                {
-                    SteamApp app = SteamApiStatic.steamApi.retrieve(values[0]);
-                    newApp.setApp(app);
-
-                } catch (SteamApiException e)
-                {
-                    e.printStackTrace();
-                }
+                    //SteamApp app = SteamApiStatic.steamApi.retrieve(values[0]);
+                    //newApp.setApp(app);
 
                 for(int i = 1 ; i < values.length ; i++)
                 {

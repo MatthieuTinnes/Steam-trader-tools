@@ -8,7 +8,6 @@ import com.github.goive.steamapi.data.SteamApp;
 import com.github.goive.steamapi.exceptions.SteamApiException;
 import com.jfoenix.controls.*;
 import com.matthieu42.steamtradertools.model.*;
-import com.matthieu42.steamtradertools.model.steamapp.AppType;
 import com.matthieu42.steamtradertools.model.steamapp.LinkedSteamAppWithKey;
 import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
