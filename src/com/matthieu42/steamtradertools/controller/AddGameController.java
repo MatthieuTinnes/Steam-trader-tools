@@ -8,7 +8,7 @@ import com.github.goive.steamapi.data.SteamApp;
 import com.github.goive.steamapi.exceptions.SteamApiException;
 import com.jfoenix.controls.*;
 import com.matthieu42.steamtradertools.model.*;
-import com.matthieu42.steamtradertools.model.steamapp.SteamAppWithKey;
+import com.matthieu42.steamtradertools.model.steamapp.LinkedSteamAppWithKey;
 import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
@@ -89,7 +89,7 @@ public class AddGameController implements Initializable
             addGameButton.setGraphic(new JFXSpinner());
             selectedApp.setOnSucceeded((WorkerStateEvent t) ->
             {
-                SteamAppWithKey newApp = new SteamAppWithKey(id);
+                LinkedSteamAppWithKey newApp = new LinkedSteamAppWithKey(id);
                 newApp.setApp(selectedApp.getValue());
 
                 /* Add the app to the user list */

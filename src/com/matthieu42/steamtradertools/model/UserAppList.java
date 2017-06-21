@@ -2,8 +2,8 @@ package com.matthieu42.steamtradertools.model;
 
 import com.github.goive.steamapi.data.SteamApp;
 import com.github.goive.steamapi.exceptions.SteamApiException;
-import com.matthieu42.steamtradertools.model.steamapp.SteamAppWithKey;
-
+import com.matthieu42.steamtradertools.model.steamapp.AbstractSteamAppWithKey;
+import com.matthieu42.steamtradertools.model.steamapp.LinkedSteamAppWithKey;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -23,28 +23,28 @@ public class UserAppList
 {
     @XmlElementWrapper(name = "steamApps")
     @XmlElement(name = "steamApp")
-    private TreeSet<SteamAppWithKey> appList;
+    private TreeSet<AbstractSteamAppWithKey> appList;
     @XmlElement(name = "nbTotalKey")
     private int nbTotalKey;
 
 
-    UserAppList()
+    public UserAppList()
     {
         appList = new TreeSet<>();
         nbTotalKey = 0;
     }
 
-    public void addApp(SteamAppWithKey app)
+    public void addApp(AbstractSteamAppWithKey app)
     {
         this.appList.add(app);
     }
 
-    public void delApp(SteamAppWithKey app)
+    public void delApp(AbstractSteamAppWithKey app)
     {
         this.appList.remove(app);
     }
 
-    public TreeSet<SteamAppWithKey> getAppList()
+    public TreeSet<AbstractSteamAppWithKey> getAppList()
     {
         return appList;
     }
@@ -52,7 +52,7 @@ public class UserAppList
     public void updateNbTotalKey()
     {
         int total = 0;
-        for(SteamAppWithKey app : this.appList)
+        for(AbstractSteamAppWithKey app : this.appList)
         {
             total += app.getNbTotalKey();
         }
@@ -70,7 +70,7 @@ public class UserAppList
         return appList.size();
     }
 
-    private void setAppList(TreeSet<SteamAppWithKey> appList) {
+    private void setAppList(TreeSet<AbstractSteamAppWithKey> appList) {
         this.appList = appList;
     }
 
@@ -84,9 +84,13 @@ public class UserAppList
                 Preferences prefs = Preferences.userNodeForPackage(com.matthieu42.steamtradertools.controller.AppController.class);
                 prefs.put(PreferencesKeys.SAVE_PATH.toString(),file.getAbsolutePath());
                 UserAppList loadedList = (UserAppList) um.unmarshal(file);
-                for(SteamAppWithKey a : loadedList.getAppList())
+                for(AbstractSteamAppWithKey a : loadedList.getAppList())
                 {
-                    a.setApp(a.getId());
+                    if(a instanceof LinkedSteamAppWithKey){
+                        LinkedSteamAppWithKey l = (LinkedSteamAppWithKey) a;
+                        l.setApp(l.getId());
+                    }
+
                 }
                 this.setAppList(loadedList.getAppList());
                 this.nbTotalKey = loadedList.nbTotalKey;
@@ -110,10 +114,10 @@ public class UserAppList
         FileInputStream csvData = new FileInputStream(csv);
         try (BufferedReader br = new BufferedReader(new FileReader(csv))) {
             String line;
-            TreeSet<SteamAppWithKey> appList = new TreeSet<>();
+            TreeSet<AbstractSteamAppWithKey> appList = new TreeSet<>();
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(";");
-                SteamAppWithKey newApp = new SteamAppWithKey(Integer.parseInt(values[0]));
+                LinkedSteamAppWithKey newApp = new LinkedSteamAppWithKey(Integer.parseInt(values[0]));
                 appList.add(newApp);
                 try
                 {

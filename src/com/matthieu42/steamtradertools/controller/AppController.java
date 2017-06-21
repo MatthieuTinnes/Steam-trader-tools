@@ -9,7 +9,9 @@ import com.matthieu42.steamtradertools.model.Point;
 import com.matthieu42.steamtradertools.model.key.KeyCurrentUse;
 import com.matthieu42.steamtradertools.model.key.KeyState;
 import com.matthieu42.steamtradertools.model.key.SteamKey;
-import com.matthieu42.steamtradertools.model.steamapp.SteamAppWithKey;
+import com.matthieu42.steamtradertools.model.steamapp.AbstractSteamAppWithKey;
+import com.matthieu42.steamtradertools.model.steamapp.LinkedSteamAppWithKey;
+import com.matthieu42.steamtradertools.model.steamapp.NotLinkedSteamAppWithKey;
 import javafx.application.HostServices;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -51,7 +53,7 @@ public class AppController implements Initializable
     @FXML
     public BorderPane root;
     @FXML
-    private JFXListView<SteamAppWithKey> appList;
+    private JFXListView<AbstractSteamAppWithKey> appList;
     @FXML
     private JFXButton addGameButton;
     @FXML
@@ -122,7 +124,7 @@ public class AppController implements Initializable
     private ControllerBinder controllerBinder;
     private final HostServices hostServices;
     private boolean noGameSelected;
-    Preferences prefs = Preferences.userNodeForPackage(com.matthieu42.steamtradertools.model.Main.class);
+    private Preferences prefs = Preferences.userNodeForPackage(com.matthieu42.steamtradertools.model.Main.class);
     private HashMap<Integer, Image> imageCache;
     private final Point dragDelta;
 
@@ -193,9 +195,10 @@ public class AppController implements Initializable
     {
         if (appList.getSelectionModel().getSelectedItem() == null)
             return;
-        SteamAppWithKey appSelected = appList.getSelectionModel().getSelectedItem();
+        AbstractSteamAppWithKey appSelected = appList.getSelectionModel().getSelectedItem();
         userAppList.delApp(appSelected);
-        delImageFromCache(appSelected);
+        if(appSelected instanceof LinkedSteamAppWithKey)
+            delImageFromCache((LinkedSteamAppWithKey) appSelected);
         updateListApp();
         appList.getSelectionModel().select(0);
         selectedGameInfo();
@@ -218,44 +221,50 @@ public class AppController implements Initializable
     @FXML
     private void selectedGameInfo()
     {
-        SteamAppWithKey appSelected = appList.getSelectionModel().getSelectedItem();
+        AbstractSteamAppWithKey appSelected = appList.getSelectionModel().getSelectedItem();
         if (appSelected == null)
             return;
-
-        if (noGameSelected)
+        if(appSelected instanceof LinkedSteamAppWithKey)
         {
-            ArrayList<Node> nodeList = new ArrayList<>();
-            nodeList.addAll(Arrays.asList(gameBanner, keyList, toolbar, gameInfoLabel, linksLabel, priceLabel, cardLabel, achievementsLabel, titleAchievementsLabel, titleCardLabel, titlePriceLabel, steamLabel, steamDbLabel, itadLabel));
-            for (Node n : nodeList)
+            LinkedSteamAppWithKey app = (LinkedSteamAppWithKey) appSelected;
+            if (noGameSelected)
             {
-                n.setVisible(true);
-                n.setDisable(false);
+                ArrayList<Node> nodeList = new ArrayList<>();
+                nodeList.addAll(Arrays.asList(gameBanner, keyList, toolbar, gameInfoLabel, linksLabel, priceLabel, cardLabel, achievementsLabel, titleAchievementsLabel, titleCardLabel, titlePriceLabel, steamLabel, steamDbLabel, itadLabel));
+                for (Node n : nodeList)
+                {
+                    n.setVisible(true);
+                    n.setDisable(false);
+                }
+                noGameSelected = false;
             }
-            noGameSelected = false;
-        }
 
-        if (imageCache.get(appSelected.getId()) == null)
-        {
-            addImageToCache(appSelected);
+            if (imageCache.get(app.getId()) == null)
+            {
+                addImageToCache(app);
+            }
+            gameBanner.setImage(imageCache.get(app.getId()));
+            keyList.setItems(FXCollections.observableArrayList(appSelected.getSteamKeyList()));
+            int price = (int) app.getSteamApp().getPrice();
+            if (price != 0)
+                priceLabel.setText(price + " €");
+            else
+                priceLabel.setText("F2P");
+            if (app.hasTradingCards())
+                cardLabel.setText(I18n.getMessage("yes"));
+            else
+                cardLabel.setText(I18n.getMessage("no"));
+            if (app.hasAchievements())
+                achievementsLabel.setText(I18n.getMessage("yes"));
+            else
+                achievementsLabel.setText(I18n.getMessage("no"));
+            steamDBLink.setText(app.getSteamLink());
+            steamLink.setText(app.getSteamDBLink());
+            isThereAnyDealLink.setText(app.getItadLink());
         }
-        gameBanner.setImage(imageCache.get(appSelected.getId()));
-        keyList.setItems(FXCollections.observableArrayList(appSelected.getSteamKeyList()));
-        int price = (int) appSelected.getSteamApp().getPrice();
-        if (price != 0)
-            priceLabel.setText(price + " €");
-        else
-            priceLabel.setText("F2P");
-        if (appSelected.hasTradingCards())
-            cardLabel.setText(I18n.getMessage("yes"));
-        else
-            cardLabel.setText(I18n.getMessage("no"));
-        if (appSelected.hasAchievements())
-            achievementsLabel.setText(I18n.getMessage("yes"));
-        else
-            achievementsLabel.setText(I18n.getMessage("no"));
-        steamDBLink.setText(appSelected.getSteamLink());
-        steamLink.setText(appSelected.getSteamDBLink());
-        isThereAnyDealLink.setText(appSelected.getItadLink());
+        else if(appSelected instanceof NotLinkedSteamAppWithKey){
+
+        }
 
     }
 
@@ -269,7 +278,7 @@ public class AppController implements Initializable
     {
         if (appList.getSelectionModel().getSelectedItem() == null)
             return;
-        SteamAppWithKey appSelected = appList.getSelectionModel().getSelectedItem();
+        AbstractSteamAppWithKey appSelected = appList.getSelectionModel().getSelectedItem();
 
         appSelected.addKey("");
         updateListKey();
@@ -280,7 +289,7 @@ public class AppController implements Initializable
     {
         if (keyList.getSelectionModel().getSelectedItem() == null || appList.getSelectionModel().getSelectedItem() == null)
             return;
-        SteamAppWithKey appSelected = appList.getSelectionModel().getSelectedItem();
+        AbstractSteamAppWithKey appSelected = appList.getSelectionModel().getSelectedItem();
         appSelected.delKey(keyList.getSelectionModel().getSelectedItem());
         updateListKey();
 
@@ -416,13 +425,13 @@ public class AppController implements Initializable
         }
     }
 
-    void addImageToCache(SteamAppWithKey app)
+    void addImageToCache(LinkedSteamAppWithKey app)
     {
         Image banner = new Image(app.getHeaderImage());
         imageCache.put(app.getId(), banner);
     }
 
-    void delImageFromCache(SteamAppWithKey app)
+    void delImageFromCache(LinkedSteamAppWithKey app)
     {
         int id = app.getId();
         imageCache.remove(id);
@@ -472,7 +481,7 @@ public class AppController implements Initializable
     @FXML
     void searchApp(KeyEvent event)
     {
-        ArrayList<SteamAppWithKey> searchResult = new ArrayList<>();
+        ArrayList<AbstractSteamAppWithKey> searchResult = new ArrayList<>();
         String search = searchText.getText();
         if (!search.isEmpty())
             searchGraphic.setImage(new Image("/com/matthieu42/steamtradertools/bundles/images/close.png"));
@@ -480,7 +489,7 @@ public class AppController implements Initializable
             searchGraphic.setImage(new Image("/com/matthieu42/steamtradertools/bundles/images/magnify.png"));
 
         search = search.toLowerCase();
-        for (SteamAppWithKey curVal : userAppList.getAppList())
+        for (AbstractSteamAppWithKey curVal : userAppList.getAppList())
         {
             if (curVal.getName().toLowerCase().contains(search))
             {

@@ -1,35 +1,73 @@
 package com.matthieu42.steamtradertools.model.steamapp;
 
+import com.github.goive.steamapi.data.SteamApp;
+import com.github.goive.steamapi.exceptions.SteamApiException;
+import com.matthieu42.steamtradertools.model.SteamApiStatic;
+import com.matthieu42.steamtradertools.model.key.SteamKey;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.*;
+import java.util.HashSet;
 
 /**
- * Created by Matthieu on 11/05/2017.
+ * Created by Matthieu on 09/03/2017.
  */
+
 @XmlRootElement
-@XmlType(name = "matthieu42.SteamApp")
-public abstract class SteamApp implements Comparable<SteamApp>
+public class LinkedSteamAppWithKey extends AbstractSteamAppWithKey
 {
-    @XmlElement
-    protected String name;
+    private SteamApp steamApp;
     @XmlElement
     protected int id;
 
-    public SteamApp(){
+
+    public LinkedSteamAppWithKey(){
 
     }
-    public SteamApp(int id){
+    public LinkedSteamAppWithKey(int id)
+    {
         this.id = id;
-        this.name = "";
     }
 
-    public String getName() {
-        return name;
+    public void setApp(int appId) throws SteamApiException
+    {
+        steamApp = SteamApiStatic.steamApi.retrieve(appId);
+        this.name = steamApp.getName();
+    }
+
+    public void setApp(SteamApp app)
+    {
+        steamApp = app;
+        this.name = steamApp.getName();
+    }
+
+    public String getHeaderImage()
+    {
+        return steamApp.getHeaderImage();
     }
 
 
+    public SteamApp getSteamApp() {
+        return steamApp;
+    }
+
+    public boolean hasTradingCards()
+    {
+        for( String s : this.getSteamApp().getCategories())
+        {
+            if(s.equals("Steam Trading Cards"))
+                return true;
+        }
+        return false;
+    }
+    public boolean hasAchievements()
+    {
+        for( String s : this.getSteamApp().getCategories())
+        {
+            if(s.equals("Steam Achievements"))
+                return true;
+        }
+        return false;
+    }
     public String getSteamLink()
     {
         return "https://steamdb.info/app/" + this.getId();
@@ -74,27 +112,9 @@ public abstract class SteamApp implements Comparable<SteamApp>
         }
         return "https://isthereanydeal.com/#/page:game/info?plain=" + itadName.toString();
     }
-
-    @Override
-    public String toString()
-    {
-        return this.name;
-    }
-
-    @Override
-    public int compareTo(SteamApp o)
-    {
-        if(this.toString().compareTo(o.toString()) > 0)
-            return 1;
-        else if(this.toString().compareTo(o.toString()) == 0)
-            return 0;
-        else if(this.toString().compareTo(o.toString()) < 0)
-            return -1;
-        return 0;
-    }
-
     public int getId()
     {
         return this.id;
     }
+
 }
