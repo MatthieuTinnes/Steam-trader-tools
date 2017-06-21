@@ -134,3 +134,17 @@ $RECYCLE.BIN/
 /debugger.xml
 /keyboard.xml
 /project.default.xml
+.classpath
+.idea/
+.project
+META-INF/
+Steam-Trader-Tools.eml
+Steam-Trader-Tools.iml
+Steam-Trader-Tools.userlibraries
+cache/
+importedData.xml
+module_steam-trader-tools.xml
+src/META-INF/
+steam-trader-tools.properties
+steam-trader-tools.xml
+steamAppList.xml
