@@ -35,7 +35,8 @@ public class AddGameController implements Initializable
         private JFXTextField searchText;
         @FXML
         private JFXButton refreshListButton;
-
+        @FXML
+        private JFXButton addGameButton;
         private final AllAppList allAppList;
         private final UserAppList userAppList;
         private final ControllerBinder controllerBinder;
@@ -77,35 +78,53 @@ public class AddGameController implements Initializable
 
         if (listResult.getSelectionModel().getSelectedItem() == null)
             return;
+
         String stringSelectedApp = listResult.getSelectionModel().getSelectedItem();
+        int id = Integer.parseInt(stringSelectedApp.substring(0,stringSelectedApp.indexOf(':')-1));
 
-        SteamApp selectedApp = SteamApiStatic.steamApi.retrieve(stringSelectedApp);
-        SteamAppWithKey newApp = new SteamAppWithKey(Integer.parseInt(selectedApp.getAppId()));
-        try
-        {
-            selectedApp = SteamApiStatic.steamApi.retrieve(stringSelectedApp);
-            newApp.setApp(selectedApp);
+        /* Retrieving an steamApp object corresponding to selected item*/
+        try{
 
-        } catch (SteamApiException e)
-        {
-            
+            Task<SteamApp> selectedApp = SteamApiStatic.retrieve(id);
+            addGameButton.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+            addGameButton.setGraphic(new JFXSpinner());
+            selectedApp.setOnSucceeded((WorkerStateEvent t) ->
+            {
+                SteamAppWithKey newApp = new SteamAppWithKey(id);
+                newApp.setApp(selectedApp.getValue());
+
+                /* Add the app to the user list */
+                if(userAppList.getAppList().contains(newApp))
+                {
+                    JFXSnackbar error = new JFXSnackbar(root);
+                    error.show(I18n.getMessage("erroralreadyaddedgame"),3000);
+                    return;
+                }
+                userAppList.addApp(newApp);
+                controllerBinder.appController.updateListApp();
+                controllerBinder.appController.addImageToCache(newApp);
+                addGameButton.setGraphic(null);
+                addGameButton.setContentDisplay(ContentDisplay.TEXT_ONLY);
+                Stage stage = (Stage) root.getScene().getWindow();
+                stage.close();
+            });
+
+            selectedApp.setOnFailed(t ->
+            {
+                JFXSnackbar error = new JFXSnackbar(root);
+                error.show(I18n.getMessage("errorappid"),3000);
+                addGameButton.setGraphic(null);
+                addGameButton.setContentDisplay(ContentDisplay.TEXT_ONLY);
+            });
+            new Thread(selectedApp).start();
+        }
+        catch (Exception e){
             JFXSnackbar error = new JFXSnackbar(root);
             error.show(I18n.getMessage("errorappid"),3000);
             return;
-
         }
 
-        if(userAppList.getAppList().contains(newApp))
-        {
-            JFXSnackbar error = new JFXSnackbar(root);
-            error.show(I18n.getMessage("erroralreadyaddedgame"),3000);
-            return;
-        }
-        userAppList.addApp(newApp);
-        controllerBinder.appController.updateListApp();
-        controllerBinder.appController.addImageToCache(newApp);
-        Stage stage = (Stage) root.getScene().getWindow();
-        stage.close();
+
     }
 
     @FXML

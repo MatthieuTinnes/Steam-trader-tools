@@ -43,7 +43,7 @@
             <Font size="29.0" />
          </font>
       </Label>
-      <JFXButton buttonType="RAISED" layoutX="254.0" layoutY="335.0" onAction="#addGame" prefHeight="43.0" prefWidth="119.0" style="-fx-background-color: #303F9F;" text="%add" textFill="WHITE">
+      <JFXButton fx:id="addGameButton" buttonType="RAISED" layoutX="254.0" layoutY="335.0" onAction="#addGame" prefHeight="43.0" prefWidth="119.0" style="-fx-background-color: #303F9F;" text="%add" textFill="WHITE">
          <font>
             <Font size="17.0" />
          </font>
