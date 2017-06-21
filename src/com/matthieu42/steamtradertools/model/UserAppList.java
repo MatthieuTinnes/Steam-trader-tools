@@ -1,10 +1,13 @@
 package com.matthieu42.steamtradertools.model;
 
 
+import com.github.goive.steamapi.data.SteamApp;
 import com.github.goive.steamapi.exceptions.SteamApiException;
 import com.matthieu42.steamtradertools.model.steamapp.AbstractSteamAppWithKey;
 import com.matthieu42.steamtradertools.model.steamapp.LinkedSteamAppWithKey;
 import com.matthieu42.steamtradertools.model.steamapp.NotLinkedSteamAppWithKey;
+import javafx.concurrent.Task;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -71,7 +74,7 @@ public class UserAppList
         return appList.size();
     }
 
-    private void setAppList(TreeSet<AbstractSteamAppWithKey> appList) {
+    public void setAppList(TreeSet<AbstractSteamAppWithKey> appList) {
         this.appList = appList;
     }
 
@@ -85,14 +88,6 @@ public class UserAppList
                 Preferences prefs = Preferences.userNodeForPackage(com.matthieu42.steamtradertools.controller.AppController.class);
                 prefs.put(PreferencesKeys.SAVE_PATH.toString(),file.getAbsolutePath());
                 UserAppList loadedList = (UserAppList) um.unmarshal(file);
-                for(AbstractSteamAppWithKey a : loadedList.getAppList())
-                {
-                    if(a instanceof LinkedSteamAppWithKey){
-                        LinkedSteamAppWithKey l = (LinkedSteamAppWithKey) a;
-                        l.setApp(l.getId());
-                    }
-
-                }
                 this.setAppList(loadedList.getAppList());
                 this.nbTotalKey = loadedList.nbTotalKey;
 
@@ -110,34 +105,117 @@ public class UserAppList
 
     }
 
-    public void importFromCsv(File csv) throws IOException
+    public Task<Void> importFromCSV(File csv) throws IOException
     {
-        FileInputStream csvData = new FileInputStream(csv);
-        try (BufferedReader br = new BufferedReader(new FileReader(csv))) {
-            String line;
-            TreeSet<AbstractSteamAppWithKey> appList = new TreeSet<>();
-            while ((line = br.readLine()) != null) {
-                String[] values = line.split(";");
-                AbstractSteamAppWithKey newApp = new NotLinkedSteamAppWithKey(values[0]);
-                appList.add(newApp);
-                    //SteamApp app = SteamApiStatic.steamApi.retrieve(values[0]);
-                    //newApp.setApp(app);
+        return new Task<Void>()
+        {
+            @Override
+            public Void call() throws InterruptedException, SteamApiException, IOException
+            {
+                FileInputStream csvData = new FileInputStream(csv);
+                int nbLines = countLines(csv.getAbsolutePath()) + 1;
+                try (BufferedReader br = new BufferedReader(new FileReader(csv)))
+                {
+                    String line;
+                    TreeSet<AbstractSteamAppWithKey> appList = new TreeSet<>();
+                    System.out.println("Start !");
+                    int progress = 0;
+                    while ((line = br.readLine()) != null)
+                    {
+                        Task<AbstractSteamAppWithKey> importLine = importLineFromCSV(line);
+                        importLine.setOnSucceeded(t ->
+                                appList.add(importLine.getValue()));
+                        importLine.run();
+                        progress++;
+                        updateProgress(progress,nbLines);
 
-                for(int i = 1 ; i < values.length ; i++)
+                    }
+
+                    UserAppList newList = new UserAppList();
+                    newList.setAppList(appList);
+                    try
+                    {
+                        newList.saveToXml(new File("importedData.xml"));
+                        System.out.println("Done !");
+                    } catch (JAXBException e)
+                    {
+                        e.printStackTrace();
+                    }
+
+                }
+                return null;
+            }
+
+        };
+
+    }
+
+    public Task<AbstractSteamAppWithKey> importLineFromCSV(String line) throws IOException{
+        return new Task<AbstractSteamAppWithKey>()
+        {
+            @Override
+            public AbstractSteamAppWithKey call() throws InterruptedException, SteamApiException, IOException
+            {
+                String[] values = line.split(";");
+                /*Try to link the app */
+                AbstractSteamAppWithKey newApp;
+                try
+                {
+                    SteamApp app = SteamApiStatic.steamApi.retrieve(values[0]);
+                    /*Successful link */
+                    Boolean tradingCards = false;
+                    for( String s : app.getCategories())
+                    {
+                        if(s.equals("Steam Trading Cards"))
+                            tradingCards = true;
+                    }
+                    Boolean achievement = false;
+                    for( String s : app.getCategories())
+                    {
+                        if(s.equals("Steam Achievements"))
+                            achievement = true;
+                    }
+                    newApp = new LinkedSteamAppWithKey(values[0],Integer.parseInt(app.getAppId()), achievement, tradingCards, app.getHeaderImage(), app.getPrice());
+                    appList.add(newApp);
+
+                } catch (SteamApiException e)
+                {
+                    /*Can't link */
+                    newApp = new NotLinkedSteamAppWithKey(values[0]);
+                    appList.add(newApp);
+                }
+                /*Adding the keys */
+                for (int i = 1; i < values.length; i++)
                 {
                     newApp.addKey(values[i]);
                 }
-                UserAppList newList = new UserAppList();
-                newList.setAppList(appList);
-                try
-                {
-                    newList.saveToXml(new File("importedData.xml"));
-                } catch (JAXBException e)
-                {
-                    e.printStackTrace();
+
+                return newApp;
+            }
+
+        };
+
+    }
+    public int countLines(String filename) throws IOException {
+        InputStream is = new BufferedInputStream(new FileInputStream(filename));
+        try {
+            byte[] c = new byte[1024];
+            int count = 0;
+            int readChars = 0;
+            boolean empty = true;
+            while ((readChars = is.read(c)) != -1) {
+                empty = false;
+                for (int i = 0; i < readChars; ++i) {
+                    if (c[i] == '\n') {
+                        ++count;
+                    }
                 }
             }
+            return (count == 0 && !empty) ? 1 : count;
+        } finally {
+            is.close();
         }
     }
+
 
 }

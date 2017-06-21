@@ -15,6 +15,7 @@ import com.matthieu42.steamtradertools.model.steamapp.NotLinkedSteamAppWithKey;
 import javafx.application.HostServices;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -245,7 +246,7 @@ public class AppController implements Initializable
             }
             gameBanner.setImage(imageCache.get(app.getId()));
             keyList.setItems(FXCollections.observableArrayList(appSelected.getSteamKeyList()));
-            int price = (int) app.getSteamApp().getPrice();
+            int price = (int) app.getPrice();
             if (price != 0)
                 priceLabel.setText(price + " €");
             else
@@ -602,7 +603,36 @@ public class AppController implements Initializable
         {
             try
             {
-                userAppList.importFromCsv(file);
+                Stage stage = new Stage();
+                stage.setTitle(I18n.getMessage("Importing"));
+                ResourceBundle bundle = I18n.getResourceBundle();
+                ImportFromCSVLoadingController importFromCSVLoadingController = new ImportFromCSVLoadingController(controllerBinder);
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/matthieu42/steamtradertools/view/importfromcsvloadingview.fxml"), bundle);
+                loader.setController(importFromCSVLoadingController);
+                AnchorPane root;
+                root = loader.load();
+                Scene loading = new Scene(root);
+                String css = AppController.class.getResource("/com/matthieu42/steamtradertools/view/style.css").toExternalForm();
+                loading.getStylesheets().add(css);
+                stage.setScene(loading);
+                stage.show();
+
+                Task<Void> importFromCSV = userAppList.importFromCSV(file);
+
+                importFromCSVLoadingController.progressBar.progressProperty().bind(importFromCSV.progressProperty());
+
+                importFromCSV.setOnSucceeded(t ->
+                {
+                    stage.close();
+                });
+
+                importFromCSV.setOnFailed(t ->
+                {
+                    return;
+                });
+                new Thread(importFromCSV).start();
+
+
             } catch (IOException e)
             {
                 e.printStackTrace();

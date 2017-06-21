@@ -1,12 +1,8 @@
 package com.matthieu42.steamtradertools.model.steamapp;
 
-import com.github.goive.steamapi.data.SteamApp;
-import com.github.goive.steamapi.exceptions.SteamApiException;
-import com.matthieu42.steamtradertools.model.SteamApiStatic;
-import com.matthieu42.steamtradertools.model.key.SteamKey;
+import javafx.scene.image.Image;
 
 import javax.xml.bind.annotation.*;
-import java.util.HashSet;
 
 /**
  * Created by Matthieu on 09/03/2017.
@@ -15,58 +11,45 @@ import java.util.HashSet;
 @XmlRootElement
 public class LinkedSteamAppWithKey extends AbstractSteamAppWithKey
 {
-    private SteamApp steamApp;
     @XmlElement
     protected int id;
+
+    @XmlElement
+    private boolean achievement;
+    @XmlElement
+    private boolean tradingCards;
+    @XmlElement
+    private String headerImage;
+    @XmlElement
+    private double price;
 
 
     public LinkedSteamAppWithKey(){
 
     }
-    public LinkedSteamAppWithKey(int id)
+    public LinkedSteamAppWithKey(String name, int id, boolean achievement, boolean tradingCards, String headerImage, double price)
     {
+        super(name);
         this.id = id;
+        this.achievement = achievement;
+        this.tradingCards = tradingCards;
+        this.headerImage = headerImage;
     }
 
-    public void setApp(int appId) throws SteamApiException
-    {
-        steamApp = SteamApiStatic.steamApi.retrieve(appId);
-        this.name = steamApp.getName();
-    }
-
-    public void setApp(SteamApp app)
-    {
-        steamApp = app;
-        this.name = steamApp.getName();
-    }
 
     public String getHeaderImage()
     {
-        return steamApp.getHeaderImage();
+        return headerImage;
     }
 
-
-    public SteamApp getSteamApp() {
-        return steamApp;
-    }
 
     public boolean hasTradingCards()
     {
-        for( String s : this.getSteamApp().getCategories())
-        {
-            if(s.equals("Steam Trading Cards"))
-                return true;
-        }
-        return false;
+        return tradingCards;
     }
     public boolean hasAchievements()
     {
-        for( String s : this.getSteamApp().getCategories())
-        {
-            if(s.equals("Steam Achievements"))
-                return true;
-        }
-        return false;
+        return achievement;
     }
     public String getSteamLink()
     {
@@ -117,4 +100,8 @@ public class LinkedSteamAppWithKey extends AbstractSteamAppWithKey
         return this.id;
     }
 
+    public double getPrice()
+    {
+        return this.price;
+    }
 }

@@ -18,6 +18,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.ContentDisplay;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
@@ -93,8 +94,20 @@ public class AddGameController implements Initializable
             addLinkedGameButton.setGraphic(new JFXSpinner());
             selectedApp.setOnSucceeded((WorkerStateEvent t) ->
             {
-                LinkedSteamAppWithKey newApp = new LinkedSteamAppWithKey(id);
-                newApp.setApp(selectedApp.getValue());
+                Boolean tradingCards = false;
+                for( String s : selectedApp.getValue().getCategories())
+                {
+                    if(s.equals("Steam Trading Cards"))
+                        tradingCards = true;
+                }
+                Boolean achievement = false;
+                for( String s : selectedApp.getValue().getCategories())
+                {
+                    if(s.equals("Steam Achievements"))
+                        achievement = true;
+                }
+
+                LinkedSteamAppWithKey newApp = new LinkedSteamAppWithKey(selectedApp.getValue().getName(),id, achievement, tradingCards, selectedApp.getValue().getHeaderImage(),selectedApp.getValue().getPrice());
 
                 /* Add the app to the user list */
                 if(userAppList.getAppList().contains(newApp))

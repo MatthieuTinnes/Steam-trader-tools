@@ -22,7 +22,10 @@ public abstract class AbstractSteamAppWithKey implements Comparable<AbstractStea
     private int nbTotalKey;
 
     public AbstractSteamAppWithKey(){
-        this.name = "";
+
+    }
+    public AbstractSteamAppWithKey(String name){
+        this.name = name;
         this.steamKeyList = new HashSet<>();
     }
 

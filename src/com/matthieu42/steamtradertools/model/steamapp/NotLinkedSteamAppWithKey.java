@@ -12,7 +12,7 @@ public class NotLinkedSteamAppWithKey extends AbstractSteamAppWithKey
 
     }
     public NotLinkedSteamAppWithKey(String name){
-        this.name = name;
+        super(name);
     }
 
 }
