@@ -1,10 +1,9 @@
 package com.matthieu42.steamtradertools.model;
 
 import com.matthieu42.steamtradertools.controller.AppController;
+import com.matthieu42.steamtradertools.controller.ControllerBinder;
 import javafx.application.Application;
 import javafx.concurrent.Task;
-import javafx.concurrent.WorkerStateEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;

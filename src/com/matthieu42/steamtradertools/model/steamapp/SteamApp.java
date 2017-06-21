@@ -1,4 +1,4 @@
-package com.matthieu42.steamtradertools.model;
+package com.matthieu42.steamtradertools.model.steamapp;
 
 
 import javax.xml.bind.annotation.XmlElement;

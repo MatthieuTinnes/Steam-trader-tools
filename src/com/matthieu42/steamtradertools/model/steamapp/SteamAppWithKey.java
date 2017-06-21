@@ -1,7 +1,9 @@
-package com.matthieu42.steamtradertools.model;
+package com.matthieu42.steamtradertools.model.steamapp;
 
 import com.github.goive.steamapi.data.SteamApp;
 import com.github.goive.steamapi.exceptions.SteamApiException;
+import com.matthieu42.steamtradertools.model.SteamApiStatic;
+import com.matthieu42.steamtradertools.model.key.SteamKey;
 
 import javax.xml.bind.annotation.*;
 import java.util.HashSet;
@@ -11,7 +13,7 @@ import java.util.HashSet;
  */
 
 @XmlRootElement
-public class SteamAppWithKey extends com.matthieu42.steamtradertools.model.SteamApp
+public class SteamAppWithKey extends com.matthieu42.steamtradertools.model.steamapp.SteamApp
 {
     private SteamApp steamApp;
 
@@ -30,7 +32,7 @@ public class SteamAppWithKey extends com.matthieu42.steamtradertools.model.Steam
         this.steamKeyList = new HashSet<>();
     }
 
-    void setApp(int appId) throws SteamApiException
+    public void setApp(int appId) throws SteamApiException
     {
         steamApp = SteamApiStatic.steamApi.retrieve(appId);
         this.name = steamApp.getName();

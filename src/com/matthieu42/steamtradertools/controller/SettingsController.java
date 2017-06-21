@@ -1,7 +1,6 @@
 package com.matthieu42.steamtradertools.controller;
 
 import com.jfoenix.controls.JFXComboBox;
-import com.matthieu42.steamtradertools.model.ControllerBinder;
 import com.matthieu42.steamtradertools.model.PreferencesKeys;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

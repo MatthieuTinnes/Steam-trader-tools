@@ -2,8 +2,7 @@ package com.matthieu42.steamtradertools.model;
 
 import com.github.goive.steamapi.data.SteamApp;
 import com.github.goive.steamapi.exceptions.SteamApiException;
-import com.jfoenix.controls.JFXSnackbar;
-import sun.reflect.generics.tree.Tree;
+import com.matthieu42.steamtradertools.model.steamapp.SteamAppWithKey;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -11,11 +10,8 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.*;
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.TreeSet;
 import java.util.prefs.Preferences;
-import java.util.stream.Stream;
 
 /**
  * Created by Matthieu on 07/03/2017.

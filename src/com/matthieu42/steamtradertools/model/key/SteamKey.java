@@ -1,4 +1,4 @@
-package com.matthieu42.steamtradertools.model;
+package com.matthieu42.steamtradertools.model.key;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
