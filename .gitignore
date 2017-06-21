@@ -124,3 +124,13 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.gitignore.io/api/java,linux,windows,intellij
+/colors.scheme.xml
+/vcs.xml
+/notifications.xml
+/other.xml
+/jdk.table.xml
+/debugger.renderers.xml
+/ide.general.xml
+/debugger.xml
+/keyboard.xml
+/project.default.xml
