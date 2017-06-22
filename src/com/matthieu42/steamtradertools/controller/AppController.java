@@ -67,9 +67,9 @@ public class AppController implements Initializable
     @FXML
     private TableColumn<SteamKey, String> key;
     @FXML
-    private TableColumn<SteamKey, String> state;
+    private TableColumn<SteamKey, KeyState> state;
     @FXML
-    private TableColumn<SteamKey, String> currentUse;
+    private TableColumn<SteamKey, KeyCurrentUse> currentUse;
     @FXML
     private TableColumn<SteamKey, Boolean> used;
     @FXML
@@ -157,14 +157,15 @@ public class AppController implements Initializable
 
         key.setCellValueFactory(new PropertyValueFactory<>("key"));
         key.setCellFactory(TextFieldTableCell.forTableColumn());
-
         state.setCellValueFactory(new PropertyValueFactory<>("state"));
-        ObservableList<String> stateList = FXCollections.observableArrayList(KeyState.toList());
-        state.setCellFactory(ComboBoxTableCell.forTableColumn(new DefaultStringConverter(), stateList));
+        state.setCellFactory(ComboBoxTableCell.forTableColumn(KeyState.values()));
+        state.setOnEditCommit(
+                (TableColumn.CellEditEvent<SteamKey,KeyState> t) -> t.getTableView().getItems().get(t.getTablePosition().getRow()).setState(t.getNewValue()));
 
         currentUse.setCellValueFactory(new PropertyValueFactory<>("currentUse"));
-        ObservableList<String> useList = FXCollections.observableArrayList(KeyCurrentUse.toList());
-        currentUse.setCellFactory(ComboBoxTableCell.forTableColumn(new DefaultStringConverter(), useList));
+        currentUse.setCellFactory(ComboBoxTableCell.forTableColumn(KeyCurrentUse.values()));
+        currentUse.setOnEditCommit(
+                (TableColumn.CellEditEvent<SteamKey,KeyCurrentUse> t) -> t.getTableView().getItems().get(t.getTablePosition().getRow()).setCurrentUse(t.getNewValue()));
 
         used.setCellValueFactory(new PropertyValueFactory<>("used"));
         used.setCellFactory(CheckBoxTableCell.forTableColumn(used));
@@ -246,7 +247,7 @@ public class AppController implements Initializable
                 addImageToCache(app);
             }
             gameBanner.setImage(imageCache.get(app.getId()));
-            keyList.setItems(FXCollections.observableArrayList(appSelected.getSteamKeyList()));
+            updateListKey();
             int price = (int) app.getPrice();
             if (price != 0)
                 priceLabel.setText(price + " €");

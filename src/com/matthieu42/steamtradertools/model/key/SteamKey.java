@@ -7,6 +7,7 @@ import javafx.beans.property.StringProperty;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.awt.event.KeyEvent;
 import java.time.LocalDateTime;
 
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
@@ -19,23 +20,23 @@ public class SteamKey
 {
 
     private StringProperty  key;
-    private StringProperty  state;
-    private StringProperty currentUse;
+    private KeyState state;
+    private KeyCurrentUse currentUse;
     private BooleanProperty used;
     private final StringProperty dateAdded;
 
     public SteamKey()
     {
         this.key = new SimpleStringProperty("");
-        this.state = new SimpleStringProperty("");
-        this.currentUse = new SimpleStringProperty("");
+        this.state = KeyState.FONCTIONNAL;
+        this.currentUse = KeyCurrentUse.FREE;
         this.used = new SimpleBooleanProperty(false);
         this.dateAdded = new SimpleStringProperty(LocalDateTime.now().format(ISO_LOCAL_DATE));
     }
     public SteamKey(String steamKey) {
         this.key = new SimpleStringProperty(steamKey);
-        this.state = new SimpleStringProperty("");
-        this.currentUse = new SimpleStringProperty("");
+        this.state = KeyState.FONCTIONNAL;
+        this.currentUse = KeyCurrentUse.FREE;
         this.used = new SimpleBooleanProperty(false);
         this.dateAdded = new SimpleStringProperty(LocalDateTime.now().format(ISO_LOCAL_DATE));
     }
@@ -44,20 +45,21 @@ public class SteamKey
         return key.get();
     }
     @XmlElement
-    public String getState() {
-        return state.get();
+    public KeyState getState() {
+        return state;
     }
 
-    public void setState(String state) {
-        this.state = new SimpleStringProperty(state);
+    public void setState(KeyState state) {
+        this.state = state;
     }
+
     @XmlElement
-    public String getCurrentUse() {
-        return currentUse.get();
+    public KeyCurrentUse getCurrentUse() {
+        return currentUse;
     }
 
-    public void setCurrentUse(String currentUse) {
-        this.currentUse = new SimpleStringProperty(currentUse);
+    public void setCurrentUse(KeyCurrentUse currentUse) {
+        this.currentUse = currentUse;
     }
 
     @XmlElement
@@ -74,16 +76,6 @@ public class SteamKey
     public void setKey(String key)
     {
         this.key.set(key);
-    }
-
-    public StringProperty stateProperty()
-    {
-        return state;
-    }
-
-    public StringProperty currentUseProperty()
-    {
-        return currentUse;
     }
 
     public BooleanProperty usedProperty()
