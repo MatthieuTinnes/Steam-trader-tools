@@ -113,7 +113,7 @@ public class UserAppList
             public Void call() throws InterruptedException, SteamApiException, IOException
             {
                 FileInputStream csvData = new FileInputStream(csv);
-                int nbLines = countLines(csv.getAbsolutePath()) + 1;
+                int nbLines = CountLine.countLines(csv.getAbsolutePath()) + 1;
                 try (BufferedReader br = new BufferedReader(new FileReader(csv)))
                 {
                     String line;
@@ -195,26 +195,6 @@ public class UserAppList
 
         };
 
-    }
-    public int countLines(String filename) throws IOException {
-        InputStream is = new BufferedInputStream(new FileInputStream(filename));
-        try {
-            byte[] c = new byte[1024];
-            int count = 0;
-            int readChars = 0;
-            boolean empty = true;
-            while ((readChars = is.read(c)) != -1) {
-                empty = false;
-                for (int i = 0; i < readChars; ++i) {
-                    if (c[i] == '\n') {
-                        ++count;
-                    }
-                }
-            }
-            return (count == 0 && !empty) ? 1 : count;
-        } finally {
-            is.close();
-        }
     }
 
 
