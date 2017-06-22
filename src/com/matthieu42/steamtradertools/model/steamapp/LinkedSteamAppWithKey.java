@@ -34,6 +34,7 @@ public class LinkedSteamAppWithKey extends AbstractSteamAppWithKey
         this.achievement = achievement;
         this.tradingCards = tradingCards;
         this.headerImage = headerImage;
+        this.price = price;
     }
 
 

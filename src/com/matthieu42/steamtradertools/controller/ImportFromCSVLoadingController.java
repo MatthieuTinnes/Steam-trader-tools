@@ -16,7 +16,7 @@ public class ImportFromCSVLoadingController {
     public JFXProgressBar progressBar;
 
     @FXML
-    private Label statusLabel;
+    public Label statusLabel;
 
     public ImportFromCSVLoadingController(ControllerBinder controllerBinder)
     {

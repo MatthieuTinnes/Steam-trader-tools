@@ -118,7 +118,6 @@ public class UserAppList
                 {
                     String line;
                     TreeSet<AbstractSteamAppWithKey> appList = new TreeSet<>();
-                    System.out.println("Start !");
                     int progress = 0;
                     while ((line = br.readLine()) != null)
                     {
@@ -136,7 +135,6 @@ public class UserAppList
                     try
                     {
                         newList.saveToXml(new File("importedData.xml"));
-                        System.out.println("Done !");
                     } catch (JAXBException e)
                     {
                         e.printStackTrace();

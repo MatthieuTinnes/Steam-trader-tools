@@ -45,6 +45,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.prefs.Preferences;
 
@@ -609,9 +610,9 @@ public class AppController implements Initializable
                 ImportFromCSVLoadingController importFromCSVLoadingController = new ImportFromCSVLoadingController(controllerBinder);
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/matthieu42/steamtradertools/view/importfromcsvloadingview.fxml"), bundle);
                 loader.setController(importFromCSVLoadingController);
-                AnchorPane root;
-                root = loader.load();
-                Scene loading = new Scene(root);
+                AnchorPane rootPane;
+                rootPane = loader.load();
+                Scene loading = new Scene(rootPane);
                 String css = AppController.class.getResource("/com/matthieu42/steamtradertools/view/style.css").toExternalForm();
                 loading.getStylesheets().add(css);
                 stage.setScene(loading);
@@ -620,14 +621,25 @@ public class AppController implements Initializable
                 Task<Void> importFromCSV = userAppList.importFromCSV(file);
 
                 importFromCSVLoadingController.progressBar.progressProperty().bind(importFromCSV.progressProperty());
+                importFromCSV.progressProperty().addListener((obs, oldProgress, newProgress) ->
+                {
+                    double progress = (double) newProgress*100;
+                    DecimalFormat df = new DecimalFormat("#.##");
+                    importFromCSVLoadingController.statusLabel.setText(I18n.getMessage("percentageOfGameImported") + " " + df.format(progress) + "%");
+                });
 
                 importFromCSV.setOnSucceeded(t ->
                 {
+                    System.out.println("done !");
+                    JFXSnackbar info = new JFXSnackbar(root);
+                    info.show(I18n.getMessage("CSVImportSuccess") + "importedData.xml", 3000);
                     stage.close();
                 });
 
                 importFromCSV.setOnFailed(t ->
                 {
+                    JFXSnackbar error = new JFXSnackbar(root);
+                    error.show(I18n.getMessage("errorImportingCSV"), 3000);
                     return;
                 });
                 new Thread(importFromCSV).start();
