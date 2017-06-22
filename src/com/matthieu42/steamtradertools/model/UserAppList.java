@@ -7,7 +7,6 @@ import com.matthieu42.steamtradertools.model.steamapp.AbstractSteamAppWithKey;
 import com.matthieu42.steamtradertools.model.steamapp.LinkedSteamAppWithKey;
 import com.matthieu42.steamtradertools.model.steamapp.NotLinkedSteamAppWithKey;
 import javafx.concurrent.Task;
-
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;

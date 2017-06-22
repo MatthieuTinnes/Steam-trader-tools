@@ -14,7 +14,6 @@ import com.matthieu42.steamtradertools.model.steamapp.LinkedSteamAppWithKey;
 import com.matthieu42.steamtradertools.model.steamapp.NotLinkedSteamAppWithKey;
 import javafx.application.HostServices;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
@@ -35,7 +34,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.util.converter.DefaultStringConverter;
 
 import javax.imageio.ImageIO;
 import javax.xml.bind.JAXBContext;
@@ -55,7 +53,7 @@ public class AppController implements Initializable
     @FXML
     public BorderPane root;
     @FXML
-    private JFXListView<AbstractSteamAppWithKey> appList;
+    JFXListView<AbstractSteamAppWithKey> appList;
     @FXML
     private JFXButton addGameButton;
     @FXML
@@ -222,7 +220,7 @@ public class AppController implements Initializable
     }
 
     @FXML
-    private void selectedGameInfo()
+    void selectedGameInfo()
     {
         AbstractSteamAppWithKey appSelected = appList.getSelectionModel().getSelectedItem();
         if (appSelected == null)
@@ -276,7 +274,12 @@ public class AppController implements Initializable
                 n.setDisable(true);
             }
             noGameSelected = true;
-            gameBanner.setImage(new Image("/com/matthieu42/steamtradertools/bundles/images/notLinkedLogo.png"));
+            if(I18n.getLocale() == Locale.ENGLISH){
+                gameBanner.setImage(new Image("/com/matthieu42/steamtradertools/bundles/images/notLinkedGameLogoENG.png"));
+            }
+            else
+                gameBanner.setImage(new Image("/com/matthieu42/steamtradertools/bundles/images/notLinkedLogoFR.png"));
+
             keyList.setItems(FXCollections.observableArrayList(appSelected.getSteamKeyList()));
             gameBanner.setVisible(true);
             gameBanner.setDisable(false);
@@ -601,7 +604,7 @@ public class AppController implements Initializable
     {
         FileChooser fc = new FileChooser();
         File file = fc.showOpenDialog(null);
-        if (file.exists())
+        if (file != null && file.exists())
         {
             try
             {

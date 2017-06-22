@@ -121,6 +121,9 @@ public class AddGameController implements Initializable
                 controllerBinder.appController.addImageToCache(newApp);
                 addLinkedGameButton.setGraphic(null);
                 addLinkedGameButton.setContentDisplay(ContentDisplay.TEXT_ONLY);
+                controllerBinder.appController.appList.getSelectionModel().select(newApp);
+                controllerBinder.appController.selectedGameInfo();
+                controllerBinder.appController.updateListApp();
                 Stage stage = (Stage) root.getScene().getWindow();
                 stage.close();
             });
