@@ -34,6 +34,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import javax.imageio.ImageIO;
 import javax.xml.bind.JAXBContext;
@@ -609,7 +610,7 @@ public class AppController implements Initializable
             try
             {
                 Stage stage = new Stage();
-                stage.setTitle(I18n.getMessage("Importing"));
+                stage.initStyle(StageStyle.UNDECORATED);
                 ResourceBundle bundle = I18n.getResourceBundle();
                 ImportFromCSVLoadingController importFromCSVLoadingController = new ImportFromCSVLoadingController(controllerBinder);
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/matthieu42/steamtradertools/view/importfromcsvloadingview.fxml"), bundle);
