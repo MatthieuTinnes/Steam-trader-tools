@@ -359,7 +359,6 @@ public class AppController implements Initializable
     {
         try
         {
-
             FileChooser fc = new FileChooser();
             File file = fc.showOpenDialog(null);
 

@@ -23,7 +23,9 @@ public class SteamKey
     private KeyState state;
     private KeyCurrentUse currentUse;
     private BooleanProperty used;
-    private final StringProperty dateAdded;
+
+
+    private StringProperty dateAdded;
 
     public SteamKey()
     {
@@ -31,7 +33,7 @@ public class SteamKey
         this.state = KeyState.FONCTIONNAL;
         this.currentUse = KeyCurrentUse.FREE;
         this.used = new SimpleBooleanProperty(false);
-        this.dateAdded = new SimpleStringProperty(LocalDateTime.now().format(ISO_LOCAL_DATE));
+        this.dateAdded = new SimpleStringProperty("");
     }
     public SteamKey(String steamKey) {
         this.key = new SimpleStringProperty(steamKey);
@@ -91,6 +93,11 @@ public class SteamKey
     public String getDateAdded()
     {
         return dateAdded.get();
+    }
+
+    public void setDateAdded(String dateAdded)
+    {
+        this.dateAdded.set(dateAdded);
     }
 
 }
