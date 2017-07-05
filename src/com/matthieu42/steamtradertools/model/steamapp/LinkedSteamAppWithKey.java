@@ -1,35 +1,57 @@
-package com.matthieu42.steamtradertools.model;
+package com.matthieu42.steamtradertools.model.steamapp;
 
+import javafx.scene.image.Image;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.*;
 
 /**
- * Created by Matthieu on 11/05/2017.
+ * Created by Matthieu on 09/03/2017.
  */
+
 @XmlRootElement
-@XmlType(name = "matthieu42.SteamApp")
-public abstract class SteamApp implements Comparable<SteamApp>
+public class LinkedSteamAppWithKey extends AbstractSteamAppWithKey
 {
-    @XmlElement
-    protected String name;
     @XmlElement
     protected int id;
 
-    public SteamApp(){
+    @XmlElement
+    private boolean achievement;
+    @XmlElement
+    private boolean tradingCards;
+    @XmlElement
+    private String headerImage;
+    @XmlElement
+    private double price;
+
+
+    public LinkedSteamAppWithKey(){
 
     }
-    public SteamApp(int id){
+    public LinkedSteamAppWithKey(String name, int id, boolean achievement, boolean tradingCards, String headerImage, double price)
+    {
+        super(name);
         this.id = id;
-        this.name = "";
+        this.achievement = achievement;
+        this.tradingCards = tradingCards;
+        this.headerImage = headerImage;
+        this.price = price;
     }
 
-    public String getName() {
-        return name;
+
+    public String getHeaderImage()
+    {
+        return headerImage;
     }
 
 
+    public boolean hasTradingCards()
+    {
+        return tradingCards;
+    }
+    public boolean hasAchievements()
+    {
+        return achievement;
+    }
     public String getSteamLink()
     {
         return "https://steamdb.info/app/" + this.getId();
@@ -74,27 +96,13 @@ public abstract class SteamApp implements Comparable<SteamApp>
         }
         return "https://isthereanydeal.com/#/page:game/info?plain=" + itadName.toString();
     }
-
-    @Override
-    public String toString()
-    {
-        return this.name;
-    }
-
-    @Override
-    public int compareTo(SteamApp o)
-    {
-        if(this.toString().compareTo(o.toString()) > 0)
-            return 1;
-        else if(this.toString().compareTo(o.toString()) == 0)
-            return 0;
-        else if(this.toString().compareTo(o.toString()) < 0)
-            return -1;
-        return 0;
-    }
-
     public int getId()
     {
         return this.id;
+    }
+
+    public double getPrice()
+    {
+        return this.price;
     }
 }

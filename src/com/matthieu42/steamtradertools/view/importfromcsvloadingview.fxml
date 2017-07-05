@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXProgressBar?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="171.0" prefWidth="413.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label layoutX="128.0" layoutY="14.0" text="%importFromCSV">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <JFXProgressBar fx:id="progressBar" layoutX="32.0" layoutY="76.0" prefHeight="20.0" prefWidth="350.0" progress="0.0" />
+      <Label fx:id="statusLabel" layoutX="90.0" layoutY="112.0" prefHeight="17.0" prefWidth="234.0" textAlignment="CENTER" />
+   </children>
+</AnchorPane>

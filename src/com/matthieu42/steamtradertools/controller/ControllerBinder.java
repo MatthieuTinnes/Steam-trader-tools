@@ -1,4 +1,4 @@
-package com.matthieu42.steamtradertools.model;
+package com.matthieu42.steamtradertools.controller;
 
 import com.matthieu42.steamtradertools.controller.AppController;
 

@@ -1,4 +1,6 @@
-package com.matthieu42.steamtradertools.model;
+package com.matthieu42.steamtradertools.model.key;
+
+import com.matthieu42.steamtradertools.model.I18n;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +13,8 @@ public enum KeyCurrentUse
 {
     RESERVED (I18n.getMessage("reservedfortrade")),
     KEEP (I18n.getMessage("keep")),
-    INGIVEAWAY (I18n.getMessage("ingiveaway"));
+    IN_GIVEAWAY(I18n.getMessage("ingiveaway")),
+    FREE(I18n.getMessage("free"));
 
     private String name = "";
 

@@ -22,9 +22,9 @@
 
 <BorderPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <left>
-      <JFXListView fx:id="appList" cellVerticalMargin="2.0" depth="2" fixedCellSize="30.0" focusTraversable="false" onMouseClicked="#selectedGameInfo" onMousePressed="#selectedGameInfo" prefHeight="520.0" prefWidth="292.0" snapToPixel="false" stylesheets="@style.css">
+      <JFXListView fx:id="appList" cellVerticalMargin="2.0" depth="2" fixedCellSize="30.0" focusTraversable="false" onMouseClicked="#selectedGameInfo" onMousePressed="#selectedGameInfo" prefHeight="591.0" prefWidth="295.0" snapToPixel="false" stylesheets="@style.css">
          <BorderPane.margin>
-            <Insets />
+            <Insets right="5.0" />
          </BorderPane.margin>
       </JFXListView>
    </left>
@@ -98,7 +98,7 @@
       </AnchorPane>
    </bottom>
    <center>
-      <StackPane BorderPane.alignment="CENTER">
+      <StackPane prefHeight="591.0" prefWidth="795.0" BorderPane.alignment="CENTER">
          <children>
             <TableView fx:id="keyList" disable="true" editable="true" maxHeight="-Infinity" prefHeight="323.0" prefWidth="808.0" stylesheets="@style.css" visible="false" StackPane.alignment="BOTTOM_CENTER">
               <columns>

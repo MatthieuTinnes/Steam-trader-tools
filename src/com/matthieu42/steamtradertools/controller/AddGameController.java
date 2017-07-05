@@ -8,6 +8,7 @@ import com.github.goive.steamapi.data.SteamApp;
 import com.github.goive.steamapi.exceptions.SteamApiException;
 import com.jfoenix.controls.*;
 import com.matthieu42.steamtradertools.model.*;
+import com.matthieu42.steamtradertools.model.steamapp.LinkedSteamAppWithKey;
 import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
@@ -20,6 +21,7 @@ import javafx.scene.control.ContentDisplay;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
@@ -35,6 +37,8 @@ public class AddGameController implements Initializable
         private JFXTextField searchText;
         @FXML
         private JFXButton refreshListButton;
+        @FXML
+        private JFXButton addLinkedGameButton;
 
         private final AllAppList allAppList;
         private final UserAppList userAppList;
@@ -72,40 +76,73 @@ public class AddGameController implements Initializable
     }
 
     @FXML
-    void addGame(ActionEvent event) throws SteamApiException
+    void addLinkedGame(ActionEvent event) throws SteamApiException
     {
 
         if (listResult.getSelectionModel().getSelectedItem() == null)
             return;
+
         String stringSelectedApp = listResult.getSelectionModel().getSelectedItem();
+        int id = Integer.parseInt(stringSelectedApp.substring(0,stringSelectedApp.indexOf(':')-1));
 
-        SteamApp selectedApp = SteamApiStatic.steamApi.retrieve(stringSelectedApp);
-        SteamAppWithKey newApp = new SteamAppWithKey(Integer.parseInt(selectedApp.getAppId()));
-        try
-        {
-            selectedApp = SteamApiStatic.steamApi.retrieve(stringSelectedApp);
-            newApp.setApp(selectedApp);
+        /* Retrieving an steamApp object corresponding to selected item*/
+        try{
 
-        } catch (SteamApiException e)
-        {
-            
+            Task<SteamApp> selectedApp = SteamApiStatic.retrieve(id);
+            addLinkedGameButton.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+            addLinkedGameButton.setGraphic(new JFXSpinner());
+            selectedApp.setOnSucceeded((WorkerStateEvent t) ->
+            {
+                Boolean tradingCards = false;
+                for( String s : selectedApp.getValue().getCategories())
+                {
+                    if(s.equals("Steam Trading Cards"))
+                        tradingCards = true;
+                }
+                Boolean achievement = false;
+                for( String s : selectedApp.getValue().getCategories())
+                {
+                    if(s.equals("Steam Achievements"))
+                        achievement = true;
+                }
+
+                LinkedSteamAppWithKey newApp = new LinkedSteamAppWithKey(selectedApp.getValue().getName(),id, achievement, tradingCards, selectedApp.getValue().getHeaderImage(),selectedApp.getValue().getPrice());
+
+                /* Add the app to the user list */
+                if(userAppList.getAppList().contains(newApp))
+                {
+                    JFXSnackbar error = new JFXSnackbar(root);
+                    error.show(I18n.getMessage("erroralreadyaddedgame"),3000);
+                    return;
+                }
+                userAppList.addApp(newApp);
+                controllerBinder.appController.updateListApp();
+                controllerBinder.appController.addImageToCache(newApp);
+                addLinkedGameButton.setGraphic(null);
+                addLinkedGameButton.setContentDisplay(ContentDisplay.TEXT_ONLY);
+                controllerBinder.appController.appList.getSelectionModel().select(newApp);
+                controllerBinder.appController.selectedGameInfo();
+                controllerBinder.appController.updateListApp();
+                Stage stage = (Stage) root.getScene().getWindow();
+                stage.close();
+            });
+
+            selectedApp.setOnFailed(t ->
+            {
+                JFXSnackbar error = new JFXSnackbar(root);
+                error.show(I18n.getMessage("errorappid"),3000);
+                addLinkedGameButton.setGraphic(null);
+                addLinkedGameButton.setContentDisplay(ContentDisplay.TEXT_ONLY);
+            });
+            new Thread(selectedApp).start();
+        }
+        catch (Exception e){
             JFXSnackbar error = new JFXSnackbar(root);
             error.show(I18n.getMessage("errorappid"),3000);
             return;
-
         }
 
-        if(userAppList.getAppList().contains(newApp))
-        {
-            JFXSnackbar error = new JFXSnackbar(root);
-            error.show(I18n.getMessage("erroralreadyaddedgame"),3000);
-            return;
-        }
-        userAppList.addApp(newApp);
-        controllerBinder.appController.updateListApp();
-        controllerBinder.appController.addImageToCache(newApp);
-        Stage stage = (Stage) root.getScene().getWindow();
-        stage.close();
+
     }
 
     @FXML
@@ -141,6 +178,21 @@ public class AddGameController implements Initializable
     private void setAppNameList(){
         currentAppList.addAll(allAppList.getAppNameList());
     }
+    @FXML
+    void openAddCustomGame(ActionEvent event) throws IOException
+    {
+        Stage stage = new Stage();
+        ResourceBundle bundle = I18n.getResourceBundle();
+        AddCustomGameController addCustomGameController = new AddCustomGameController(userAppList, controllerBinder);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/matthieu42/steamtradertools/view/addcustomgameview.fxml"), bundle);
+        loader.setController(addCustomGameController);
+        AnchorPane root = loader.load();
+        Scene addGameScene = new Scene(root);
+        String css = AppController.class.getResource("/com/matthieu42/steamtradertools/view/style.css").toExternalForm();
+        addGameScene.getStylesheets().add(css);
+        stage.setScene(addGameScene);
+        stage.show();
 
+    }
 
 }
