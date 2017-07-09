@@ -41,6 +41,12 @@
                         <MenuItem mnemonicParsing="false" onAction="#importFromCsv" style="-fx-text-fill: black;" text="%import" />
                   </items>
                 </Menu>
+                  <Menu mnemonicParsing="false" text="%export">
+                     <items>
+                        <MenuItem mnemonicParsing="false" onAction="#exportToListNameHandling" style="-fx-text-fill: black;" text="%exportToNameList" />
+                        <MenuItem mnemonicParsing="false" onAction="#exportToListLinkNameHandling" style="-fx-text-fill: black;" text="%exportToLinkList" />
+                     </items>
+                  </Menu>
                   <Menu mnemonicParsing="false" text="%edit">
                      <items>
                         <MenuItem mnemonicParsing="false" onAction="#openSettings" style="-fx-text-fill: black;" text="%settings" />
@@ -86,6 +92,7 @@
                   </ImageView>
                </graphic>
             </JFXButton>
+            <JFXButton id="filterButton" fx:id="filterButton" buttonType="RAISED" contentDisplay="GRAPHIC_ONLY" layoutX="255.0" layoutY="31.0" onAction="#openFilterMenu" ripplerFill="WHITE" stylesheets="@style.css" text="Button" />
          </children>
       </AnchorPane>
    </top>

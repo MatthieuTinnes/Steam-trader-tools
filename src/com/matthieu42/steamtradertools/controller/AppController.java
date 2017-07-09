@@ -17,12 +17,17 @@ import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -40,6 +45,7 @@ import javax.imageio.ImageIO;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -102,6 +108,8 @@ public class AppController implements Initializable
     @FXML
     private JFXButton searchButton;
     @FXML
+    private JFXButton filterButton;
+    @FXML
     private MenuBar menubar;
     @FXML
     private ButtonBar windowsButton;
@@ -154,6 +162,7 @@ public class AppController implements Initializable
         }
         updateListApp();
 
+        /* Define the Table View */
         key.setCellValueFactory(new PropertyValueFactory<>("key"));
         key.setCellFactory(TextFieldTableCell.forTableColumn());
         state.setCellValueFactory(new PropertyValueFactory<>("state"));
@@ -170,6 +179,31 @@ public class AppController implements Initializable
         used.setCellFactory(CheckBoxTableCell.forTableColumn(used));
 
         dateAdded.setCellValueFactory(new PropertyValueFactory<>("dateAdded"));
+
+        /* Context Menu for the filter button */
+        ContextMenu contextMenu = new ContextMenu();
+        MenuItem showAll = new MenuItem();
+        MenuItem showUsed = new MenuItem();
+        showAll.setText(I18n.getMessage("allGame"));
+        showUsed.setText(I18n.getMessage("gameWithUsedKey"));
+        showAll.setOnAction(event -> appList.setItems(FXCollections.observableArrayList(userAppList.getAppList())));
+        showUsed.setOnAction(event ->
+        {
+            ArrayList<AbstractSteamAppWithKey> usedResult = new ArrayList<>();
+            for (AbstractSteamAppWithKey steamApp : userAppList.getAppList())
+            {
+                for(SteamKey key : steamApp.getSteamKeyList()){
+                    if(key.isUsed()) {
+                        usedResult.add(steamApp);
+                        break;
+                    }
+
+                }
+            }
+            appList.setItems(FXCollections.observableArrayList(usedResult));
+        });
+        contextMenu.getItems().addAll(showAll,showUsed);
+        filterButton.setContextMenu(contextMenu);
 
         loadImageCache();
 
@@ -655,6 +689,32 @@ public class AppController implements Initializable
             }
         }
     }
+
+    @FXML
+    void exportToListNameHandling(ActionEvent event) {
+        copyToClipboard(userAppList.exportAsNameString());
+    }
+
+    @FXML
+    void exportToListLinkNameHandling(ActionEvent event)
+    {
+        copyToClipboard(userAppList.exportAsLinkNameString());
+    }
+    void copyToClipboard(String text){
+        final Clipboard clipboard = Clipboard.getSystemClipboard();
+        final ClipboardContent content = new ClipboardContent();
+        content.putString(text);
+        clipboard.setContent(content);
+        JFXSnackbar info = new JFXSnackbar(root);
+        info.show(I18n.getMessage("infolistcopy"), 3000);
+    }
+
+    @FXML
+    void openFilterMenu(ActionEvent event) {
+        Bounds bounds = filterButton.getBoundsInLocal();
+        filterButton.getContextMenu().show(filterButton,filterButton.localToScreen(bounds).getMinX(),filterButton.localToScreen(bounds).getMinY());
+    }
+
 }
 
 

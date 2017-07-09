@@ -10,6 +10,9 @@
 #minimizeButton{
 	-fx-graphic: url('../bundles/images/window-minimize.png');
 }
+#filterButton{
+    -fx-graphic: url('../bundles/images/filter.png');
+}
 .toolbar
 {
     -fx-background-color:#303F9F;

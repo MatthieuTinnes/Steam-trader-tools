@@ -193,6 +193,34 @@ public class UserAppList
         };
 
     }
+    public String exportAsNameString(){
+        StringBuilder list = new StringBuilder();
+        for (AbstractSteamAppWithKey a : appList){
+            list.append(a.getName());
+            list.append('\n');
+        }
+        list.deleteCharAt(list.lastIndexOf("\n"));
+        return list.toString();
+    }
 
-
+    public String exportAsLinkNameString()
+    {
+        StringBuilder list = new StringBuilder();
+        for (AbstractSteamAppWithKey a : appList){
+            list.append("-");
+            if(a instanceof LinkedSteamAppWithKey){
+            list.append("[");
+            list.append(a.getName());
+            list.append("](http://store.steampowered.com/app/");
+            list.append(((LinkedSteamAppWithKey) a).getId());
+            list.append("/)");
+            }
+            else {
+                list.append(a.getName());
+            }
+            list.append('\n');
+        }
+        list.deleteCharAt(list.lastIndexOf("\n"));
+        return list.toString();
+    }
 }
