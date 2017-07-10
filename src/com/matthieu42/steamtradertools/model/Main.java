@@ -6,6 +6,7 @@ import javafx.application.Application;
 import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
@@ -22,6 +23,7 @@ public class Main extends Application {
     public void start(final Stage primaryStage) throws Exception
     {
         primaryStage.initStyle(StageStyle.UNDECORATED);
+        primaryStage.getIcons().add(new Image("/com/matthieu42/steamtradertools/bundles/images/Icon_STTBluepng.png"));
         Preferences prefs = Preferences.userNodeForPackage(com.matthieu42.steamtradertools.model.Main.class);
         String language = prefs.get(PreferencesKeys.LANGUAGE.toString(),Locale.ENGLISH.getDisplayLanguage());
         Locale locale;

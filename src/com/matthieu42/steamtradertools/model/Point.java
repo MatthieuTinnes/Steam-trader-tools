@@ -5,8 +5,6 @@ package com.matthieu42.steamtradertools.model;
  */
 public class Point
 {
-
-
     private double x;
     private double y;
     public Point()

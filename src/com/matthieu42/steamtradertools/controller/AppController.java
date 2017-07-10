@@ -700,7 +700,8 @@ public class AppController implements Initializable
     {
         copyToClipboard(userAppList.exportAsLinkNameString());
     }
-    void copyToClipboard(String text){
+
+    private void copyToClipboard(String text){
         final Clipboard clipboard = Clipboard.getSystemClipboard();
         final ClipboardContent content = new ClipboardContent();
         content.putString(text);
