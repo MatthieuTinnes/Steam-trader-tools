@@ -134,7 +134,8 @@ public class AppController implements Initializable
     private Preferences prefs = Preferences.userNodeForPackage(com.matthieu42.steamtradertools.model.Main.class);
     private HashMap<Integer, Image> imageCache;
     private final Point dragDelta;
-
+    private boolean filterMode;
+    private TreeSet<AbstractSteamAppWithKey> currentAppList;
     public AppController(AllAppList appList, UserAppList userApp, HostServices hostServices)
     {
         this.allAppList = appList;
@@ -143,6 +144,8 @@ public class AppController implements Initializable
         this.imageCache = new HashMap<>();
         this.dragDelta = new Point();
         this.hostServices = hostServices;
+        filterMode = false;
+
     }
 
     @Override
@@ -158,6 +161,7 @@ public class AppController implements Initializable
                 e.printStackTrace();
             }
         }
+        currentAppList = userAppList.getAppList();
         updateListApp();
 
         /* Define the Table View */
@@ -184,21 +188,17 @@ public class AppController implements Initializable
         MenuItem showUsed = new MenuItem();
         showAll.setText(I18n.getMessage("allGame"));
         showUsed.setText(I18n.getMessage("gameWithUsedKey"));
-        showAll.setOnAction(event -> appList.setItems(FXCollections.observableArrayList(userAppList.getAppList())));
+        showAll.setOnAction(event ->
+        {
+            currentAppList = userAppList.getAppList();
+            updateListApp();
+            filterMode = false;
+        });
         showUsed.setOnAction(event ->
         {
-            ArrayList<AbstractSteamAppWithKey> usedResult = new ArrayList<>();
-            for (AbstractSteamAppWithKey steamApp : userAppList.getAppList())
-            {
-                for(SteamKey key : steamApp.getSteamKeyList()){
-                    if(key.isUsed()) {
-                        usedResult.add(steamApp);
-                        break;
-                    }
-
-                }
-            }
-            appList.setItems(FXCollections.observableArrayList(usedResult));
+            currentAppList = getGamesWithUsedKey();
+            updateListApp();
+            filterMode = true;
         });
         contextMenu.getItems().addAll(showAll,showUsed);
         filterButton.setContextMenu(contextMenu);
@@ -240,7 +240,9 @@ public class AppController implements Initializable
 
     void updateListApp()
     {
-        appList.setItems(FXCollections.observableArrayList(userAppList.getAppList()));
+        if(filterMode)
+            currentAppList = getGamesWithUsedKey();
+        appList.setItems(FXCollections.observableArrayList(currentAppList));
         gameNumber.setText(I18n.getMessage("gamenumber") + " " + userAppList.getNbTotalApp());
         keyNumber.setText(I18n.getMessage("keynumber") + " " + userAppList.getNbTotalKey());
     }
@@ -547,7 +549,7 @@ public class AppController implements Initializable
             searchGraphic.setImage(new Image("/com/matthieu42/steamtradertools/bundles/images/magnify.png"));
 
         search = search.toLowerCase();
-        for (AbstractSteamAppWithKey curVal : userAppList.getAppList())
+        for (AbstractSteamAppWithKey curVal : currentAppList)
         {
             if (curVal.getName().toLowerCase().contains(search))
             {
@@ -712,6 +714,7 @@ public class AppController implements Initializable
     void openFilterMenu(ActionEvent event) {
         Bounds bounds = filterButton.getBoundsInLocal();
         filterButton.getContextMenu().show(filterButton,filterButton.localToScreen(bounds).getMinX(),filterButton.localToScreen(bounds).getMinY());
+
     }
     @FXML
     void openAbout(ActionEvent event) throws IOException {
@@ -734,6 +737,21 @@ public class AppController implements Initializable
     @FXML
     void openHelpWebsite(ActionEvent event) {
         hostServices.showDocument("https://steam-trader-tools.matthieu42.fr/help/");
+    }
+
+    private TreeSet<AbstractSteamAppWithKey> getGamesWithUsedKey(){
+        TreeSet<AbstractSteamAppWithKey> usedResult = new TreeSet<>();
+        for (AbstractSteamAppWithKey steamApp : userAppList.getAppList())
+        {
+            for(SteamKey key : steamApp.getSteamKeyList()){
+                if(key.isUsed()) {
+                    usedResult.add(steamApp);
+                    break;
+                }
+
+            }
+        }
+        return usedResult;
     }
 
 }
