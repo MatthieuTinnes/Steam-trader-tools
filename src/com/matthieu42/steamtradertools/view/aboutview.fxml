@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label layoutX="264.0" layoutY="52.0" text="%about">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label alignment="CENTER" layoutX="85.0" layoutY="128.0" prefHeight="81.0" prefWidth="436.0" text="%aboutText" wrapText="true" />
+      <ImageView fitHeight="102.0" fitWidth="138.0" layoutX="52.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../bundles/images/Icon_STTBluepng.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="102.0" fitWidth="138.0" layoutX="425.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../bundles/images/logo%20transparent.png" />
+         </image>
+      </ImageView>
+      <Hyperlink fx:id="websiteLink" layoutX="245.0" layoutY="223.0" onAction="#openWebsite" text="%website" />
+      <Label layoutX="78.0" layoutY="265.0" text="%donateText" />
+      <Hyperlink fx:id="donationLink" layoutX="246.0" layoutY="305.0" onAction="#openDonationPage" text="%donationPage" />
+   </children>
+</AnchorPane>

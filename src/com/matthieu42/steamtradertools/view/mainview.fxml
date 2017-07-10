@@ -31,7 +31,7 @@
    <top>
       <AnchorPane prefHeight="76.0" prefWidth="1100.0" style="-fx-background-color: #3F51B5;" stylesheets="@style.css" BorderPane.alignment="CENTER">
          <children>
-            <MenuBar fx:id="menubar" onMouseDragged="#moveWindows" onMousePressed="#moveWindowsRecorder" prefHeight="22.0" prefWidth="1100.0" style="-fx-background-color: #303F9F;" stylesheets="@style.css">
+            <MenuBar fx:id="menubar" onMouseDragged="#moveWindows" onMousePressed="#moveWindowsRecorder" prefHeight="25.0" prefWidth="1100.0" style="-fx-background-color: #303F9F;" stylesheets="@style.css">
               <menus>
                 <Menu mnemonicParsing="false" text="%file">
                   <items>
@@ -39,6 +39,7 @@
                         <MenuItem mnemonicParsing="false" onAction="#saveNewAppListToXml" style="-fx-text-fill: black;" text="%saveas" />
                         <MenuItem mnemonicParsing="false" onAction="#loadAppListFromXml" style="-fx-text-fill: black;" text="%load" />
                         <MenuItem mnemonicParsing="false" onAction="#importFromCsv" style="-fx-text-fill: black;" text="%import" />
+                        <MenuItem mnemonicParsing="false" onAction="#openSettings" style="-fx-text-fill: black;" text="%settings" />
                   </items>
                 </Menu>
                   <Menu mnemonicParsing="false" text="%export">
@@ -47,10 +48,12 @@
                         <MenuItem mnemonicParsing="false" onAction="#exportToListLinkNameHandling" style="-fx-text-fill: black;" text="%exportToLinkList" />
                      </items>
                   </Menu>
-                  <Menu mnemonicParsing="false" text="%edit">
+                  <Menu mnemonicParsing="false" text="%help">
                      <items>
-                        <MenuItem mnemonicParsing="false" onAction="#openSettings" style="-fx-text-fill: black;" text="%settings" />
-                     </items></Menu>
+                        <MenuItem mnemonicParsing="false" onAction="#openHelpWebsite" style="-fx-text-fill: black;" text="%sttHelp" />
+                        <MenuItem mnemonicParsing="false" onAction="#openAbout" style="-fx-text-fill: black;" text="%about" />
+                     </items>
+                  </Menu>
               </menus>
             </MenuBar>
             <ButtonBar fx:id="windowsButton" buttonMinWidth="30.0" layoutX="966.0" prefHeight="26.0" prefWidth="134.0">

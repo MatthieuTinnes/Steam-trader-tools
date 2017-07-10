@@ -17,7 +17,6 @@ import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -45,7 +44,6 @@ import javax.imageio.ImageIO;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -422,7 +420,7 @@ public class AppController implements Initializable
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             FileChooser fc = new FileChooser();
-            File file = fc.showOpenDialog(null);
+            File file = fc.showSaveDialog(null);
             if (file != null)
             {
                 marshaller.marshal(userAppList, file);
@@ -714,6 +712,28 @@ public class AppController implements Initializable
     void openFilterMenu(ActionEvent event) {
         Bounds bounds = filterButton.getBoundsInLocal();
         filterButton.getContextMenu().show(filterButton,filterButton.localToScreen(bounds).getMinX(),filterButton.localToScreen(bounds).getMinY());
+    }
+    @FXML
+    void openAbout(ActionEvent event) throws IOException {
+        Stage stage = new Stage();
+        stage.setResizable(false);
+        ResourceBundle bundle = I18n.getResourceBundle();
+        AboutController aboutController = new AboutController(hostServices);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/matthieu42/steamtradertools/view/aboutview.fxml"), bundle);
+        loader.setController(aboutController);
+        AnchorPane rootPane;
+        rootPane = loader.load();
+        Scene loading = new Scene(rootPane);
+        String css = AppController.class.getResource("/com/matthieu42/steamtradertools/view/style.css").toExternalForm();
+        loading.getStylesheets().add(css);
+        stage.setScene(loading);
+        stage.show();
+
+    }
+
+    @FXML
+    void openHelpWebsite(ActionEvent event) {
+        hostServices.showDocument("https://steam-trader-tools.matthieu42.fr/help/");
     }
 
 }
