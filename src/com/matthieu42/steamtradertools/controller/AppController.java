@@ -721,7 +721,7 @@ public class AppController implements Initializable
         Stage stage = new Stage();
         stage.setResizable(false);
         ResourceBundle bundle = I18n.getResourceBundle();
-        AboutController aboutController = new AboutController(hostServices);
+        AboutController aboutController = new AboutController(hostServices, prefs);
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/matthieu42/steamtradertools/view/aboutview.fxml"), bundle);
         loader.setController(aboutController);
         AnchorPane rootPane;

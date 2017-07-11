@@ -28,5 +28,12 @@
       <Hyperlink fx:id="websiteLink" layoutX="245.0" layoutY="223.0" onAction="#openWebsite" text="%website" />
       <Label layoutX="78.0" layoutY="265.0" text="%donateText" />
       <Hyperlink fx:id="donationLink" layoutX="246.0" layoutY="305.0" onAction="#openDonationPage" text="%donationPage" />
+      <Label alignment="CENTER" layoutX="212.0" layoutY="95.0" prefHeight="33.0" prefWidth="155.0" text="%versionNumber" textAlignment="CENTER">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="38.0" layoutY="361.0" text="%currentSaveLocation" />
+      <Label fx:id="saveLocation" layoutX="184.0" layoutY="361.0" />
    </children>
 </AnchorPane>
