@@ -2,7 +2,6 @@ package com.matthieu42.steamtradertools.model.steamapp;
 
 
 import com.matthieu42.steamtradertools.model.key.SteamKey;
-
 import javax.xml.bind.annotation.*;
 import java.util.HashSet;
 

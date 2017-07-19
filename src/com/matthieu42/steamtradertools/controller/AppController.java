@@ -1,9 +1,6 @@
 package com.matthieu42.steamtradertools.controller;
 import com.github.goive.steamapi.exceptions.SteamApiException;
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXListView;
-import com.jfoenix.controls.JFXSnackbar;
-import com.jfoenix.controls.JFXTextField;
+import com.jfoenix.controls.*;
 import com.matthieu42.steamtradertools.model.*;
 import com.matthieu42.steamtradertools.model.Point;
 import com.matthieu42.steamtradertools.model.key.KeyCurrentUse;
@@ -17,6 +14,7 @@ import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -36,10 +34,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-
 import javax.imageio.ImageIO;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -65,6 +65,8 @@ public class AppController implements Initializable
     private ImageView gameBanner;
     @FXML
     private AnchorPane rightPane;
+    @FXML
+    private StackPane stackPane;
     @FXML
     private TableView<SteamKey> keyList;
     @FXML
@@ -371,7 +373,7 @@ public class AppController implements Initializable
     }
 
     @FXML
-    void saveAppListToXml(ActionEvent event)
+    void saveAppListToXml()
     {
         File file = new File(prefs.get(PreferencesKeys.SAVE_PATH.toString(), null));
         try
@@ -602,8 +604,30 @@ public class AppController implements Initializable
     @FXML
     void close(ActionEvent event)
     {
-        Stage stage = (Stage) root.getScene().getWindow();
-        stage.close();
+        JFXDialogLayout content = new JFXDialogLayout();
+        Text header = new Text(I18n.getMessage("save"));
+        header.setTextAlignment(TextAlignment.CENTER);
+        content.setHeading(header);
+        content.setBody(new Text(I18n.getMessage("savechangesdialog")));
+        JFXDialog savingDialog = new JFXDialog(stackPane,content,JFXDialog.DialogTransition.CENTER);
+        JFXButton yes = new JFXButton(I18n.getMessage("yes"));
+        JFXButton no = new JFXButton(I18n.getMessage("no"));
+        yes.setOnAction(event1 ->
+        {
+            saveAppListToXml();
+            Stage stage = (Stage) root.getScene().getWindow();
+            stage.close();
+        });
+
+        no.setOnAction(event12 ->
+        {
+            Stage stage = (Stage) root.getScene().getWindow();
+            stage.close();
+        });
+
+        content.setActions(yes,no);
+        savingDialog.show();
+
     }
 
     @FXML

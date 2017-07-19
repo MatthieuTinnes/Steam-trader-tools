@@ -1,7 +1,6 @@
 package com.matthieu42.steamtradertools.model.key;
 
 import com.matthieu42.steamtradertools.model.I18n;
-
 import java.util.ArrayList;
 import java.util.List;
 

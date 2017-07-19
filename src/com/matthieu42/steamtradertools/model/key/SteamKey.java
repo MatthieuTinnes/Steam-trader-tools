@@ -4,12 +4,9 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.awt.event.KeyEvent;
 import java.time.LocalDateTime;
-
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
 
 /**
