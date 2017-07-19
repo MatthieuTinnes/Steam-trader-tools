@@ -183,7 +183,7 @@ public class AppController implements Initializable
         used.setCellFactory(CheckBoxTableCell.forTableColumn(used));
 
         dateAdded.setCellValueFactory(new PropertyValueFactory<>("dateAdded"));
-
+        dateAdded.setCellFactory(TextFieldTableCell.forTableColumn());
         /* Context Menu for the filter button */
         ContextMenu contextMenu = new ContextMenu();
         MenuItem showAll = new MenuItem();

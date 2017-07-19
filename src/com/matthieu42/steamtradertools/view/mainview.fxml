@@ -114,7 +114,7 @@
               <columns>
                 <TableColumn fx:id="key" prefWidth="208.0" text="%key" />
                   <TableColumn fx:id="used" prefWidth="90.0" text="%keyused" />
-                  <TableColumn fx:id="dateAdded" editable="false" prefWidth="140.0" text="%dateadded" />
+                  <TableColumn fx:id="dateAdded" prefWidth="140.0" text="%dateadded" />
                 <TableColumn fx:id="state" prefWidth="180.0" text="%state" />
                   <TableColumn fx:id="currentUse" prefWidth="175.0" text="%currentuse" />
               </columns>

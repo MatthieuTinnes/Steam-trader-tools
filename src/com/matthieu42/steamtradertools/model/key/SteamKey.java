@@ -16,12 +16,10 @@ import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
 public class SteamKey
 {
 
-    private StringProperty  key;
+    private StringProperty key;
     private KeyState state;
     private KeyCurrentUse currentUse;
     private BooleanProperty used;
-
-
     private StringProperty dateAdded;
 
     public SteamKey()
@@ -95,6 +93,10 @@ public class SteamKey
     public void setDateAdded(String dateAdded)
     {
         this.dateAdded.set(dateAdded);
+    }
+    public StringProperty dateAddedProperty()
+    {
+        return dateAdded;
     }
 
 }
