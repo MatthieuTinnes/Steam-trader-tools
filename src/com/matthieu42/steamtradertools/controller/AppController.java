@@ -10,11 +10,12 @@ import com.matthieu42.steamtradertools.model.steamapp.AbstractSteamAppWithKey;
 import com.matthieu42.steamtradertools.model.steamapp.LinkedSteamAppWithKey;
 import com.matthieu42.steamtradertools.model.steamapp.NotLinkedSteamAppWithKey;
 import javafx.application.HostServices;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -129,7 +130,7 @@ public class AppController implements Initializable
     private Label itadLabel;
 
     private AllAppList allAppList;
-    private UserAppList userAppList;
+    public UserAppList userAppList;
     private ControllerBinder controllerBinder;
     private final HostServices hostServices;
     private boolean noGameSelected;
@@ -137,6 +138,7 @@ public class AppController implements Initializable
     private HashMap<Integer, Image> imageCache;
     private final Point dragDelta;
     private boolean filterMode;
+    public boolean modified;
     private TreeSet<AbstractSteamAppWithKey> currentAppList;
     public AppController(AllAppList appList, UserAppList userApp, HostServices hostServices)
     {
@@ -146,7 +148,8 @@ public class AppController implements Initializable
         this.imageCache = new HashMap<>();
         this.dragDelta = new Point();
         this.hostServices = hostServices;
-        filterMode = false;
+        this.filterMode = false;
+        this.modified = false;
 
     }
 
@@ -171,19 +174,19 @@ public class AppController implements Initializable
         key.setCellFactory(TextFieldTableCell.forTableColumn());
         state.setCellValueFactory(new PropertyValueFactory<>("state"));
         state.setCellFactory(ComboBoxTableCell.forTableColumn(KeyState.values()));
-        state.setOnEditCommit(
-                (TableColumn.CellEditEvent<SteamKey,KeyState> t) -> t.getTableView().getItems().get(t.getTablePosition().getRow()).setState(t.getNewValue()));
-
         currentUse.setCellValueFactory(new PropertyValueFactory<>("currentUse"));
         currentUse.setCellFactory(ComboBoxTableCell.forTableColumn(KeyCurrentUse.values()));
-        currentUse.setOnEditCommit(
-                (TableColumn.CellEditEvent<SteamKey,KeyCurrentUse> t) -> t.getTableView().getItems().get(t.getTablePosition().getRow()).setCurrentUse(t.getNewValue()));
-
         used.setCellValueFactory(new PropertyValueFactory<>("used"));
         used.setCellFactory(CheckBoxTableCell.forTableColumn(used));
-
         dateAdded.setCellValueFactory(new PropertyValueFactory<>("dateAdded"));
         dateAdded.setCellFactory(TextFieldTableCell.forTableColumn());
+
+        /*Change listener for table view */
+        ChangeListener<Object> listener = (obs, oldValue, newValue) ->
+                modified = true;
+        keyList.focusedProperty().addListener(listener);
+        keyList.getSelectionModel().selectedItemProperty().addListener(listener);
+
         /* Context Menu for the filter button */
         ContextMenu contextMenu = new ContextMenu();
         MenuItem showAll = new MenuItem();
@@ -204,7 +207,6 @@ public class AppController implements Initializable
         });
         contextMenu.getItems().addAll(showAll,showUsed);
         filterButton.setContextMenu(contextMenu);
-
         loadImageCache();
 
     }
@@ -232,6 +234,7 @@ public class AppController implements Initializable
         if (appList.getSelectionModel().getSelectedItem() == null)
             return;
         AbstractSteamAppWithKey appSelected = appList.getSelectionModel().getSelectedItem();
+        controllerBinder.appController.modified = true;
         userAppList.delApp(appSelected);
         if(appSelected instanceof LinkedSteamAppWithKey)
             delImageFromCache((LinkedSteamAppWithKey) appSelected);
@@ -342,7 +345,7 @@ public class AppController implements Initializable
         if (appList.getSelectionModel().getSelectedItem() == null)
             return;
         AbstractSteamAppWithKey appSelected = appList.getSelectionModel().getSelectedItem();
-
+        controllerBinder.appController.modified = true;
         appSelected.addKey("");
         updateListKey();
     }
@@ -353,6 +356,7 @@ public class AppController implements Initializable
         if (keyList.getSelectionModel().getSelectedItem() == null || appList.getSelectionModel().getSelectedItem() == null)
             return;
         AbstractSteamAppWithKey appSelected = appList.getSelectionModel().getSelectedItem();
+        controllerBinder.appController.modified = true;
         appSelected.delKey(keyList.getSelectionModel().getSelectedItem());
         updateListKey();
 
@@ -379,6 +383,7 @@ public class AppController implements Initializable
         try
         {
             userAppList.saveToXml(file);
+            modified = false;
         } catch (JAXBException e)
         {
             e.printStackTrace();
@@ -439,7 +444,7 @@ public class AppController implements Initializable
 
     }
 
-    private void saveImageCache()
+    void saveImageCache()
     {
         File dir = new File("cache/");
         if (!dir.exists())
@@ -466,7 +471,7 @@ public class AppController implements Initializable
         }
     }
 
-    private void loadImageCache()
+    void loadImageCache()
     {
         File dir = new File("cache/");
         File[] directoryListing = dir.listFiles();
@@ -604,29 +609,36 @@ public class AppController implements Initializable
     @FXML
     void close(ActionEvent event)
     {
-        JFXDialogLayout content = new JFXDialogLayout();
-        Text header = new Text(I18n.getMessage("save"));
-        header.setTextAlignment(TextAlignment.CENTER);
-        content.setHeading(header);
-        content.setBody(new Text(I18n.getMessage("savechangesdialog")));
-        JFXDialog savingDialog = new JFXDialog(stackPane,content,JFXDialog.DialogTransition.CENTER);
-        JFXButton yes = new JFXButton(I18n.getMessage("yes"));
-        JFXButton no = new JFXButton(I18n.getMessage("no"));
-        yes.setOnAction(event1 ->
+        if(modified)
         {
-            saveAppListToXml();
+            JFXDialogLayout content = new JFXDialogLayout();
+            Text header = new Text(I18n.getMessage("save"));
+            header.setTextAlignment(TextAlignment.CENTER);
+            content.setHeading(header);
+            content.setBody(new Text(I18n.getMessage("savechangesdialog")));
+            JFXDialog savingDialog = new JFXDialog(stackPane, content, JFXDialog.DialogTransition.CENTER);
+            JFXButton yes = new JFXButton(I18n.getMessage("yes"));
+            JFXButton no = new JFXButton(I18n.getMessage("no"));
+            yes.setOnAction(event1 ->
+            {
+                saveAppListToXml();
+                Stage stage = (Stage) root.getScene().getWindow();
+                stage.close();
+            });
+
+            no.setOnAction(event12 ->
+            {
+                Stage stage = (Stage) root.getScene().getWindow();
+                stage.close();
+            });
+
+            content.setActions(yes, no);
+            savingDialog.show();
+        }
+        else{
             Stage stage = (Stage) root.getScene().getWindow();
             stage.close();
-        });
-
-        no.setOnAction(event12 ->
-        {
-            Stage stage = (Stage) root.getScene().getWindow();
-            stage.close();
-        });
-
-        content.setActions(yes,no);
-        savingDialog.show();
+        }
 
     }
 

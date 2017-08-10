@@ -6,7 +6,6 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label layoutX="262.0" layoutY="14.0" text="%settings">
@@ -19,5 +18,9 @@
       <JFXButton buttonType="RAISED" layoutX="354.0" layoutY="294.0" onAction="#save" prefHeight="43.0" prefWidth="119.0" style="-fx-background-color: #303F9F;" stylesheets="@style.css" text="%save" textFill="WHITE" />
       <JFXComboBox fx:id="languageList" layoutX="243.0" layoutY="107.0" prefHeight="25.0" prefWidth="107.0" />
       <Label layoutX="413.0" layoutY="111.0" text="%needrestart" textFill="RED" />
+      <JFXButton buttonType="RAISED" layoutX="242.0" layoutY="158.0" onAction="#downloadImageCache" prefHeight="25.0" prefWidth="107.0" style="-fx-background-color: #303F9F;" stylesheets="@style.css" text="%download" textFill="WHITE" />
+      <Label layoutX="70.0" layoutY="158.0" prefHeight="25.0" prefWidth="147.0" text="%download_image_cache" />
+      <JFXButton buttonType="RAISED" layoutX="242.0" layoutY="200.0" onAction="#deleteImageCache" prefHeight="25.0" prefWidth="107.0" style="-fx-background-color: #303F9F;" stylesheets="@style.css" text="%delete" textFill="WHITE" />
+      <Label layoutX="70.0" layoutY="200.0" prefHeight="25.0" prefWidth="147.0" text="%delete_image_cache" />
    </children>
 </AnchorPane>

@@ -52,6 +52,7 @@ public class AddCustomGameController implements Initializable
             return;
         }
         userAppList.addApp(app);
+        controllerBinder.appController.modified = true;
         controllerBinder.appController.appList.getSelectionModel().select(app);
         controllerBinder.appController.selectedGameInfo();
         controllerBinder.appController.updateListApp();

@@ -2,6 +2,8 @@ package com.matthieu42.steamtradertools.controller;
 
 import com.jfoenix.controls.JFXComboBox;
 import com.matthieu42.steamtradertools.model.PreferencesKeys;
+import com.matthieu42.steamtradertools.model.steamapp.AbstractSteamAppWithKey;
+import com.matthieu42.steamtradertools.model.steamapp.LinkedSteamAppWithKey;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -50,5 +52,21 @@ public class SettingsController implements Initializable
         prefs.put(PreferencesKeys.LANGUAGE.toString(),language);
         Stage stage = (Stage) root.getScene().getWindow();
         stage.close();
+    }
+
+    @FXML
+    void deleteImageCache(ActionEvent event) {
+
+    }
+
+    @FXML
+    void downloadImageCache(ActionEvent event) {
+        for(AbstractSteamAppWithKey app : controllerBinder.appController.userAppList.getAppList()){
+            if(app instanceof LinkedSteamAppWithKey){
+                controllerBinder.appController.addImageToCache((LinkedSteamAppWithKey) app);
+            }
+        }
+        controllerBinder.appController.saveImageCache();
+        controllerBinder.appController.loadImageCache();
     }
 }

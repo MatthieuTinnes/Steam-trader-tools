@@ -115,6 +115,7 @@ public class AddGameController implements Initializable
                     return;
                 }
                 userAppList.addApp(newApp);
+                controllerBinder.appController.modified = true;
                 controllerBinder.appController.updateListApp();
                 controllerBinder.appController.addImageToCache(newApp);
                 addLinkedGameButton.setGraphic(null);
