@@ -11,9 +11,7 @@ import com.matthieu42.steamtradertools.model.steamapp.LinkedSteamAppWithKey;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-
 import java.net.URL;
 import java.util.Locale;
 import java.util.ResourceBundle;

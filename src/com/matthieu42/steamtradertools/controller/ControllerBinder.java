@@ -1,6 +1,5 @@
 package com.matthieu42.steamtradertools.controller;
 
-import com.matthieu42.steamtradertools.controller.AppController;
 
 /**
  * Created by Matthieu on 07/03/2017.
