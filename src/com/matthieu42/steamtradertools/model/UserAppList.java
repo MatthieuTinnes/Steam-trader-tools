@@ -3,6 +3,7 @@ package com.matthieu42.steamtradertools.model;
 
 import com.github.goive.steamapi.data.SteamApp;
 import com.github.goive.steamapi.exceptions.SteamApiException;
+import com.matthieu42.steamtradertools.model.key.SteamKey;
 import com.matthieu42.steamtradertools.model.steamapp.AbstractSteamAppWithKey;
 import com.matthieu42.steamtradertools.model.steamapp.LinkedSteamAppWithKey;
 import com.matthieu42.steamtradertools.model.steamapp.NotLinkedSteamAppWithKey;
@@ -111,7 +112,6 @@ public class UserAppList
             @Override
             public Void call() throws InterruptedException, SteamApiException, IOException
             {
-                FileInputStream csvData = new FileInputStream(csv);
                 int nbLines = CountLine.countLines(csv.getAbsolutePath()) + 1;
                 try (BufferedReader br = new BufferedReader(new FileReader(csv)))
                 {
@@ -222,5 +222,20 @@ public class UserAppList
         }
         list.deleteCharAt(list.lastIndexOf("\n"));
         return list.toString();
+    }
+
+    public TreeSet<AbstractSteamAppWithKey> getGamesWithUsedKey(){
+        TreeSet<AbstractSteamAppWithKey> usedResult = new TreeSet<>();
+        for (AbstractSteamAppWithKey steamApp : this.getAppList())
+        {
+            for(SteamKey key : steamApp.getSteamKeyList()){
+                if(key.isUsed()) {
+                    usedResult.add(steamApp);
+                    break;
+                }
+
+            }
+        }
+        return usedResult;
     }
 }

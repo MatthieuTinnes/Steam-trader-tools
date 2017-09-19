@@ -14,7 +14,7 @@ import java.util.prefs.Preferences;
 /**
  * Created by Matthieu on 10/07/2017.
  */
-public class AboutController implements Initializable
+public class AboutController extends AbstractController implements Initializable
 {
     private final HostServices hostServices;
     private Preferences prefs;

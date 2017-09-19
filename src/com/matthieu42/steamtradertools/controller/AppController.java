@@ -2,6 +2,8 @@ package com.matthieu42.steamtradertools.controller;
 import com.github.goive.steamapi.exceptions.SteamApiException;
 import com.jfoenix.controls.*;
 import com.matthieu42.steamtradertools.model.*;
+import com.matthieu42.steamtradertools.model.ImageCache.ImageCacheError;
+import com.matthieu42.steamtradertools.model.ImageCache.ImageCacheHandler;
 import com.matthieu42.steamtradertools.model.Point;
 import com.matthieu42.steamtradertools.model.key.KeyCurrentUse;
 import com.matthieu42.steamtradertools.model.key.KeyState;
@@ -12,9 +14,6 @@ import com.matthieu42.steamtradertools.model.steamapp.NotLinkedSteamAppWithKey;
 import javafx.application.HostServices;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.concurrent.Task;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -34,30 +33,22 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import javax.imageio.ImageIO;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.text.DecimalFormat;
 import java.util.*;
 import java.util.prefs.Preferences;
 
-public class AppController implements Initializable
+public class AppController extends AbstractController implements Initializable
 {
-
-    @FXML
-    public BorderPane root;
     @FXML
     JFXListView<AbstractSteamAppWithKey> appList;
     @FXML
@@ -140,6 +131,8 @@ public class AppController implements Initializable
     private boolean filterMode;
     public boolean modified;
     private TreeSet<AbstractSteamAppWithKey> currentAppList;
+    private ImageCacheHandler imageCacheHandler;
+    private CSVImportTool csvImportTool;
     public AppController(AllAppList appList, UserAppList userApp, HostServices hostServices)
     {
         this.allAppList = appList;
@@ -150,6 +143,8 @@ public class AppController implements Initializable
         this.hostServices = hostServices;
         this.filterMode = false;
         this.modified = false;
+        imageCacheHandler = new ImageCacheHandler(imageCache);
+        csvImportTool = new CSVImportTool(userAppList);
 
     }
 
@@ -201,13 +196,13 @@ public class AppController implements Initializable
         });
         showUsed.setOnAction(event ->
         {
-            currentAppList = getGamesWithUsedKey();
+            currentAppList = userAppList.getGamesWithUsedKey();
             updateListApp();
             filterMode = true;
         });
         contextMenu.getItems().addAll(showAll,showUsed);
         filterButton.setContextMenu(contextMenu);
-        loadImageCache();
+        imageCacheHandler.loadImageCache();
 
     }
 
@@ -216,7 +211,7 @@ public class AppController implements Initializable
     {
         Stage stage = new Stage();
         ResourceBundle bundle = I18n.getResourceBundle();
-        AddGameController addGameController = new AddGameController(allAppList, userAppList, controllerBinder);
+        AddGameController addGameController = new AddGameController(allAppList, userAppList, controllerBinder,imageCacheHandler);
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/matthieu42/steamtradertools/view/addgameview.fxml"), bundle);
         loader.setController(addGameController);
         AnchorPane root = loader.load();
@@ -237,7 +232,14 @@ public class AppController implements Initializable
         controllerBinder.appController.modified = true;
         userAppList.delApp(appSelected);
         if(appSelected instanceof LinkedSteamAppWithKey)
-            delImageFromCache((LinkedSteamAppWithKey) appSelected);
+            try
+            {
+                imageCacheHandler.delImageFromCache((LinkedSteamAppWithKey) appSelected);
+            } catch (ImageCacheError imageCacheError)
+            {
+                JFXSnackbar info = new JFXSnackbar(root);
+                info.show(I18n.getMessage("errordeletecache"), 3000);
+            }
         updateListApp();
         appList.getSelectionModel().select(0);
         selectedGameInfo();
@@ -246,7 +248,7 @@ public class AppController implements Initializable
     void updateListApp()
     {
         if(filterMode)
-            currentAppList = getGamesWithUsedKey();
+            currentAppList = userAppList.getGamesWithUsedKey();
         appList.setItems(FXCollections.observableArrayList(currentAppList));
         gameNumber.setText(I18n.getMessage("gamenumber") + " " + userAppList.getNbTotalApp());
         keyNumber.setText(I18n.getMessage("keynumber") + " " + userAppList.getNbTotalKey());
@@ -282,7 +284,7 @@ public class AppController implements Initializable
 
             if (imageCache.get(app.getId()) == null)
             {
-                addImageToCache(app);
+                imageCacheHandler.addImageToCache(app);
             }
             gameBanner.setImage(imageCache.get(app.getId()));
             updateListKey();
@@ -392,7 +394,14 @@ public class AppController implements Initializable
         }
         JFXSnackbar info = new JFXSnackbar(root);
         info.show(I18n.getMessage("savedtoxml"), 3000);
-        saveImageCache();
+        try
+        {
+            imageCacheHandler.saveImageCache();
+        } catch (ImageCacheError imageCacheError)
+        {
+            JFXSnackbar error = new JFXSnackbar(root);
+            error.show(I18n.getMessage("errorcachefolder"), 3000);
+        }
     }
 
     @FXML
@@ -444,105 +453,25 @@ public class AppController implements Initializable
 
     }
 
-    void saveImageCache()
-    {
-        File dir = new File("cache/");
-        if (!dir.exists())
-            if (!dir.mkdir())
-            {
-                JFXSnackbar error = new JFXSnackbar(root);
-                error.show(I18n.getMessage("errorcachefolder"), 3000);
-            }
-        for (Map.Entry<Integer, Image> i : imageCache.entrySet())
-        {
-            BufferedImage bi = SwingFXUtils.fromFXImage(i.getValue(), null);
-            File file = new File("cache/" + i.getKey());
-            if (!file.exists() && bi != null)
-            {
-                try
-                {
-                    ImageIO.write(bi, "png", file);
-                } catch (IOException e)
-                {
-                    e.printStackTrace();
-                }
-            }
 
-        }
-    }
-
-    void loadImageCache()
-    {
-        File dir = new File("cache/");
-        File[] directoryListing = dir.listFiles();
-        if (directoryListing != null)
-        {
-            for (File child : directoryListing)
-            {
-                if (Objects.equals(child.getName(), "Thumbs.db"))
-                    child.delete();
-                else
-                {
-                    Image ima = new Image("file:///" + child.getAbsolutePath());
-                    imageCache.put(Integer.parseInt(child.getName()), ima);
-                }
-
-
-            }
-        }
-    }
-
-    void addImageToCache(LinkedSteamAppWithKey app)
-    {
-        Image banner = new Image(app.getHeaderImage());
-        imageCache.put(app.getId(), banner);
-    }
-
-    void delImageFromCache(LinkedSteamAppWithKey app)
-    {
-        int id = app.getId();
-        imageCache.remove(id);
-        File cached = new File("cache/" + id);
-        if (cached.exists())
-            if (!cached.delete())
-            {
-                JFXSnackbar info = new JFXSnackbar(root);
-                info.show(I18n.getMessage("errordeletecache"), 3000);
-            }
-
-
-    }
 
     @FXML
     void handleSaveCache(ActionEvent event)
     {
-        saveImageCache();
-
+        try{
+            imageCacheHandler.saveImageCache();
+        }
+        catch (ImageCacheError imageCacheError)
+        {
+            JFXSnackbar error = new JFXSnackbar(root);
+            error.show(I18n.getMessage("errorcachefolder"), 3000);
+        }
     }
 
     @FXML
     void openSettings(ActionEvent event)
     {
-        Stage stage = new Stage();
-        stage.setTitle(I18n.getMessage("settings"));
-        ResourceBundle bundle = I18n.getResourceBundle();
-        SettingsController settingsController = new SettingsController(controllerBinder);
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/matthieu42/steamtradertools/view/settingsview.fxml"), bundle);
-        loader.setController(settingsController);
-        AnchorPane root = null;
-        try
-        {
-            root = loader.load();
-        } catch (IOException e)
-        {
-            e.printStackTrace();
-            return;
-        }
-        Scene addGameScene = new Scene(root);
-        String css = AppController.class.getResource("/com/matthieu42/steamtradertools/view/style.css").toExternalForm();
-        addGameScene.getStylesheets().add(css);
-        stage.setScene(addGameScene);
-        stage.show();
+        new OpenNewWindows().Open(I18n.getMessage("settings"),"/com/matthieu42/steamtradertools/view/settingsview.fxml",new SettingsController(controllerBinder,imageCacheHandler));
     }
 
     @FXML
@@ -676,53 +605,7 @@ public class AppController implements Initializable
         File file = fc.showOpenDialog(null);
         if (file != null && file.exists())
         {
-            try
-            {
-                Stage stage = new Stage();
-                stage.initStyle(StageStyle.UNDECORATED);
-                ResourceBundle bundle = I18n.getResourceBundle();
-                ImportFromCSVLoadingController importFromCSVLoadingController = new ImportFromCSVLoadingController(controllerBinder);
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/matthieu42/steamtradertools/view/importfromcsvloadingview.fxml"), bundle);
-                loader.setController(importFromCSVLoadingController);
-                AnchorPane rootPane;
-                rootPane = loader.load();
-                Scene loading = new Scene(rootPane);
-                String css = AppController.class.getResource("/com/matthieu42/steamtradertools/view/style.css").toExternalForm();
-                loading.getStylesheets().add(css);
-                stage.setScene(loading);
-                stage.show();
-
-                Task<Void> importFromCSV = userAppList.importFromCSV(file);
-
-                importFromCSVLoadingController.progressBar.progressProperty().bind(importFromCSV.progressProperty());
-                importFromCSV.progressProperty().addListener((obs, oldProgress, newProgress) ->
-                {
-                    double progress = (double) newProgress*100;
-                    DecimalFormat df = new DecimalFormat("#.##");
-                    importFromCSVLoadingController.statusLabel.setText(I18n.getMessage("percentageOfGameImported") + " " + df.format(progress) + "%");
-                });
-
-                importFromCSV.setOnSucceeded(t ->
-                {
-                    System.out.println("done !");
-                    JFXSnackbar info = new JFXSnackbar(root);
-                    info.show(I18n.getMessage("CSVImportSuccess") + "importedData.xml", 3000);
-                    stage.close();
-                });
-
-                importFromCSV.setOnFailed(t ->
-                {
-                    JFXSnackbar error = new JFXSnackbar(root);
-                    error.show(I18n.getMessage("errorImportingCSV"), 3000);
-                    return;
-                });
-                new Thread(importFromCSV).start();
-
-
-            } catch (IOException e)
-            {
-                e.printStackTrace();
-            }
+            csvImportTool.launchImport(file);
         }
     }
 
@@ -754,20 +637,7 @@ public class AppController implements Initializable
     }
     @FXML
     void openAbout(ActionEvent event) throws IOException {
-        Stage stage = new Stage();
-        stage.setResizable(false);
-        ResourceBundle bundle = I18n.getResourceBundle();
-        AboutController aboutController = new AboutController(hostServices, prefs);
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/matthieu42/steamtradertools/view/aboutview.fxml"), bundle);
-        loader.setController(aboutController);
-        AnchorPane rootPane;
-        rootPane = loader.load();
-        Scene loading = new Scene(rootPane);
-        String css = AppController.class.getResource("/com/matthieu42/steamtradertools/view/style.css").toExternalForm();
-        loading.getStylesheets().add(css);
-        stage.setScene(loading);
-        stage.show();
-
+        new OpenNewWindows().Open(I18n.getMessage("about"),"/com/matthieu42/steamtradertools/view/aboutview.fxml",new AboutController(hostServices, prefs));
     }
 
     @FXML
@@ -775,22 +645,4 @@ public class AppController implements Initializable
         hostServices.showDocument("https://steam-trader-tools.matthieu42.fr/help/");
     }
 
-    private TreeSet<AbstractSteamAppWithKey> getGamesWithUsedKey(){
-        TreeSet<AbstractSteamAppWithKey> usedResult = new TreeSet<>();
-        for (AbstractSteamAppWithKey steamApp : userAppList.getAppList())
-        {
-            for(SteamKey key : steamApp.getSteamKeyList()){
-                if(key.isUsed()) {
-                    usedResult.add(steamApp);
-                    break;
-                }
-
-            }
-        }
-        return usedResult;
-    }
-
 }
-
-
-

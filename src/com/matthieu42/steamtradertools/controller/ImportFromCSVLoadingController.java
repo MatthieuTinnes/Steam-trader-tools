@@ -11,15 +11,9 @@ import java.io.*;
 
 public class ImportFromCSVLoadingController {
 
-    private final ControllerBinder controllerBinder;
     @FXML
     public JFXProgressBar progressBar;
 
     @FXML
     public Label statusLabel;
-
-    public ImportFromCSVLoadingController(ControllerBinder controllerBinder)
-    {
-        this.controllerBinder = controllerBinder;
-    }
 }

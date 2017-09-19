@@ -18,10 +18,8 @@ import java.util.ResourceBundle;
 /**
  * Created by Matthieu on 21/06/2017.
  */
-public class AddCustomGameController implements Initializable
+public class AddCustomGameController extends AbstractController implements Initializable
 {
-    @FXML
-    private AnchorPane root;
     @FXML
     private JFXTextField notLinkedAppName;
 

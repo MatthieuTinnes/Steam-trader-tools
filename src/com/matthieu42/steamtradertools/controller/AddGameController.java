@@ -8,6 +8,7 @@ import com.github.goive.steamapi.data.SteamApp;
 import com.github.goive.steamapi.exceptions.SteamApiException;
 import com.jfoenix.controls.*;
 import com.matthieu42.steamtradertools.model.*;
+import com.matthieu42.steamtradertools.model.ImageCache.ImageCacheHandler;
 import com.matthieu42.steamtradertools.model.steamapp.LinkedSteamAppWithKey;
 import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
@@ -24,11 +25,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
-public class AddGameController implements Initializable
+public class AddGameController extends AbstractController implements Initializable
 {
-        @FXML
-        private AnchorPane root;
-
         @FXML
         private JFXListView<String> listResult;
 
@@ -41,14 +39,16 @@ public class AddGameController implements Initializable
 
         private final AllAppList allAppList;
         private final UserAppList userAppList;
-        private final ControllerBinder controllerBinder;
+    private ImageCacheHandler imageCacheHandler;
+    private final ControllerBinder controllerBinder;
         private TreeSet<String> currentAppList;
 
 
-    AddGameController(AllAppList appList,UserAppList userApp, ControllerBinder controller)
+    AddGameController(AllAppList appList,UserAppList userApp, ControllerBinder controller,ImageCacheHandler imageCacheHandler)
     {
         this.allAppList = appList;
         this.userAppList = userApp;
+        this.imageCacheHandler = imageCacheHandler;
         this.currentAppList = new TreeSet<>();
         this.controllerBinder = controller;
     }
@@ -117,7 +117,7 @@ public class AddGameController implements Initializable
                 userAppList.addApp(newApp);
                 controllerBinder.appController.modified = true;
                 controllerBinder.appController.updateListApp();
-                controllerBinder.appController.addImageToCache(newApp);
+                imageCacheHandler.addImageToCache(newApp);
                 addLinkedGameButton.setGraphic(null);
                 addLinkedGameButton.setContentDisplay(ContentDisplay.TEXT_ONLY);
                 controllerBinder.appController.appList.getSelectionModel().select(newApp);
