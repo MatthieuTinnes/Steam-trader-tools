@@ -22,7 +22,7 @@
 
 <BorderPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <left>
-      <JFXListView fx:id="appList" cellVerticalMargin="2.0" depth="2" fixedCellSize="30.0" focusTraversable="false" onMouseClicked="#selectedGameInfo" onMousePressed="#selectedGameInfo" prefHeight="591.0" prefWidth="295.0" snapToPixel="false" stylesheets="@style.css">
+      <JFXListView fx:id="appList" depth="2" fixedCellSize="30.0" focusTraversable="false" onMouseClicked="#selectedGameInfo" onMousePressed="#selectedGameInfo" prefHeight="591.0" prefWidth="295.0" snapToPixel="false" stylesheets="@style.css">
          <BorderPane.margin>
             <Insets right="5.0" />
          </BorderPane.margin>

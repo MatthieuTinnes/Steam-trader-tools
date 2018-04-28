@@ -13,8 +13,10 @@ import com.matthieu42.steamtradertools.model.steamapp.LinkedSteamAppWithKey;
 import com.matthieu42.steamtradertools.model.steamapp.NotLinkedSteamAppWithKey;
 import javafx.application.HostServices;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -38,6 +40,8 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Callback;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -156,7 +160,7 @@ public class AppController extends AbstractController implements Initializable
             try
             {
                 userAppList.loadFromXml(new File(prefs.get(PreferencesKeys.SAVE_PATH.toString(), null)));
-            } catch (JAXBException | SteamApiException e)
+            } catch ( SteamApiException | JAXBException e)
             {
                 e.printStackTrace();
             }
@@ -173,6 +177,10 @@ public class AppController extends AbstractController implements Initializable
         currentUse.setCellFactory(ComboBoxTableCell.forTableColumn(KeyCurrentUse.values()));
         used.setCellValueFactory(new PropertyValueFactory<>("used"));
         used.setCellFactory(CheckBoxTableCell.forTableColumn(used));
+        used.setCellFactory(CheckBoxTableCell.forTableColumn(param -> {
+            modified = true;
+            return keyList.getItems().get(param).usedProperty();
+        }));
         dateAdded.setCellValueFactory(new PropertyValueFactory<>("dateAdded"));
         dateAdded.setCellFactory(TextFieldTableCell.forTableColumn());
 
@@ -272,8 +280,7 @@ public class AppController extends AbstractController implements Initializable
             LinkedSteamAppWithKey app = (LinkedSteamAppWithKey) appSelected;
             if (noGameSelected)
             {
-                ArrayList<Node> nodeList = new ArrayList<>();
-                nodeList.addAll(Arrays.asList(gameBanner, keyList, toolbar, gameInfoLabel, linksLabel, priceLabel, cardLabel, achievementsLabel, titleAchievementsLabel, titleCardLabel, titlePriceLabel, steamLabel, steamDbLabel, itadLabel));
+                ArrayList<Node> nodeList = new ArrayList<>(Arrays.asList(gameBanner, keyList, toolbar, gameInfoLabel, linksLabel, priceLabel, cardLabel, achievementsLabel, titleAchievementsLabel, titleCardLabel, titlePriceLabel, steamLabel, steamDbLabel, itadLabel));
                 for (Node n : nodeList)
                 {
                     n.setVisible(true);
