@@ -13,10 +13,8 @@ import com.matthieu42.steamtradertools.model.steamapp.LinkedSteamAppWithKey;
 import com.matthieu42.steamtradertools.model.steamapp.NotLinkedSteamAppWithKey;
 import javafx.application.HostServices;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -40,7 +38,6 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -220,11 +217,11 @@ public class AppController extends AbstractController implements Initializable
         Stage stage = new Stage();
         ResourceBundle bundle = I18n.getResourceBundle();
         AddGameController addGameController = new AddGameController(allAppList, userAppList, controllerBinder,imageCacheHandler);
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/matthieu42/steamtradertools/view/addgameview.fxml"), bundle);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/addgameview.fxml"), bundle);
         loader.setController(addGameController);
         AnchorPane root = loader.load();
         Scene addGameScene = new Scene(root);
-        String css = AppController.class.getResource("/com/matthieu42/steamtradertools/view/style.css").toExternalForm();
+        String css = AppController.class.getResource("/view/style.css").toExternalForm();
         addGameScene.getStylesheets().add(css);
         stage.setScene(addGameScene);
         stage.show();
@@ -324,10 +321,10 @@ public class AppController extends AbstractController implements Initializable
             }
             noGameSelected = true;
             if(I18n.getLocale() == Locale.ENGLISH){
-                gameBanner.setImage(new Image("/com/matthieu42/steamtradertools/bundles/images/notLinkedGameLogoENG.png"));
+                gameBanner.setImage(new Image("/images/notLinkedGameLogoENG.png"));
             }
             else
-                gameBanner.setImage(new Image("/com/matthieu42/steamtradertools/bundles/images/notLinkedLogoFR.png"));
+                gameBanner.setImage(new Image("/images/notLinkedLogoFR.png"));
 
             keyList.setItems(FXCollections.observableArrayList(appSelected.getSteamKeyList()));
             gameBanner.setVisible(true);
@@ -478,7 +475,7 @@ public class AppController extends AbstractController implements Initializable
     @FXML
     void openSettings(ActionEvent event)
     {
-        new OpenNewWindows().Open(I18n.getMessage("settings"),"/com/matthieu42/steamtradertools/view/settingsview.fxml",new SettingsController(controllerBinder,imageCacheHandler));
+        new OpenNewWindows().Open(I18n.getMessage("settings"), "/view/settingsview.fxml",new SettingsController(controllerBinder,imageCacheHandler));
     }
 
     @FXML
@@ -487,9 +484,9 @@ public class AppController extends AbstractController implements Initializable
         ArrayList<AbstractSteamAppWithKey> searchResult = new ArrayList<>();
         String search = searchText.getText();
         if (!search.isEmpty())
-            searchGraphic.setImage(new Image("/com/matthieu42/steamtradertools/bundles/images/close.png"));
+            searchGraphic.setImage(new Image("/images/close.png"));
         else
-            searchGraphic.setImage(new Image("/com/matthieu42/steamtradertools/bundles/images/magnify.png"));
+            searchGraphic.setImage(new Image("/images/magnify.png"));
 
         search = search.toLowerCase();
         for (AbstractSteamAppWithKey curVal : currentAppList)
@@ -511,7 +508,7 @@ public class AppController extends AbstractController implements Initializable
         {
             searchText.clear();
             updateListApp();
-            searchGraphic.setImage(new Image("/com/matthieu42/steamtradertools/bundles/images/magnify.png"));
+            searchGraphic.setImage(new Image("/images/magnify.png"));
         } else
             searchApp(null);
     }
@@ -644,7 +641,7 @@ public class AppController extends AbstractController implements Initializable
     }
     @FXML
     void openAbout(ActionEvent event) throws IOException {
-        new OpenNewWindows().Open(I18n.getMessage("about"),"/com/matthieu42/steamtradertools/view/aboutview.fxml",new AboutController(hostServices, prefs));
+        new OpenNewWindows().Open(I18n.getMessage("about"), "/view/aboutview.fxml",new AboutController(hostServices, prefs));
     }
 
     @FXML

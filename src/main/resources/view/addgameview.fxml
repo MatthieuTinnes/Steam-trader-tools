@@ -26,7 +26,7 @@
                <graphic>
                   <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../bundles/images/magnify.png" />
+                        <Image url="@../images/magnify.png" />
                      </image>
                   </ImageView>
                </graphic>

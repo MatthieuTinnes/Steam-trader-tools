@@ -184,11 +184,11 @@ public class AddGameController extends AbstractController implements Initializab
         Stage stage = new Stage();
         ResourceBundle bundle = I18n.getResourceBundle();
         AddCustomGameController addCustomGameController = new AddCustomGameController(userAppList, controllerBinder);
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/matthieu42/steamtradertools/view/addcustomgameview.fxml"), bundle);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/addcustomgameview.fxml"), bundle);
         loader.setController(addCustomGameController);
         AnchorPane root = loader.load();
         Scene addGameScene = new Scene(root);
-        String css = AppController.class.getResource("/com/matthieu42/steamtradertools/view/style.css").toExternalForm();
+        String css = AppController.class.getResource("/view/style.css").toExternalForm();
         addGameScene.getStylesheets().add(css);
         stage.setScene(addGameScene);
         stage.show();

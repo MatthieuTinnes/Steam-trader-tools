@@ -22,7 +22,7 @@ public class Main extends Application {
     public void start(final Stage primaryStage) throws Exception
     {
         primaryStage.initStyle(StageStyle.UNDECORATED);
-        primaryStage.getIcons().add(new Image("/com/matthieu42/steamtradertools/bundles/images/Icon_STTBluepng.png"));
+        primaryStage.getIcons().add(new Image("/images/Icon_STTBluepng.png"));
         Preferences prefs = Preferences.userNodeForPackage(com.matthieu42.steamtradertools.model.Main.class);
         String language = prefs.get(PreferencesKeys.LANGUAGE.toString(),Locale.ENGLISH.getDisplayLanguage());
         Locale locale;
@@ -33,14 +33,14 @@ public class Main extends Application {
         else
             locale = Locale.ENGLISH;
         I18n.setLocale(locale);
-        I18n.setBundle("com/matthieu42/steamtradertools/bundles/lang",locale);
+        I18n.setBundle("lang",locale);
         final AllAppList allAppList = new AllAppList();
         final UserAppList userAppList = new UserAppList();
 
         File steamAppList = new File("steamAppList.xml");
         if (!steamAppList.exists())
         {
-            FXMLLoader splashLoader = new FXMLLoader(getClass().getResource("/com/matthieu42/steamtradertools/view/loadview.fxml"),I18n.getResourceBundle());
+            FXMLLoader splashLoader = new FXMLLoader(getClass().getResource("/view/loadview.fxml"),I18n.getResourceBundle());
             AnchorPane pane = splashLoader.load();
             primaryStage.setScene(new Scene(pane));
             primaryStage.show();
@@ -73,7 +73,7 @@ public class Main extends Application {
         AppController appController = new AppController(allAppList, userAppList,getHostServices());
         ControllerBinder controllerBinder = new ControllerBinder(appController);
         appController.addControllerBinder(controllerBinder);
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/matthieu42/steamtradertools/view/mainview.fxml"), I18n.getResourceBundle());
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/mainview.fxml"), I18n.getResourceBundle());
         loader.setController(appController);
         BorderPane root;
         try
@@ -86,7 +86,7 @@ public class Main extends Application {
         }
         primaryStage.setTitle("Steam Trader Tools");
         Scene scene = new Scene(root, 1100, 700);
-        scene.getStylesheets().add("/com/matthieu42/steamtradertools/view/style.css");
+        scene.getStylesheets().add("/view/style.css");
         primaryStage.setScene(scene);
         primaryStage.show();
         primaryStage.setResizable(false);

@@ -23,7 +23,7 @@ public class OpenNewWindows
         {
             rootPane = loader.load();
             Scene loading = new Scene(rootPane);
-            String css = AppController.class.getResource("/com/matthieu42/steamtradertools/view/style.css").toExternalForm();
+            String css = AppController.class.getResource("/view/style.css").toExternalForm();
             loading.getStylesheets().add(css);
             stage.setScene(loading);
             stage.show();

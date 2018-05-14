@@ -17,12 +17,12 @@
       <Label alignment="CENTER" layoutX="85.0" layoutY="128.0" prefHeight="81.0" prefWidth="436.0" text="%aboutText" wrapText="true" />
       <ImageView fitHeight="102.0" fitWidth="138.0" layoutX="52.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../bundles/images/Icon_STTBluepng.png" />
+            <Image url="@../images/Icon_STTBluepng.png" />
          </image>
       </ImageView>
       <ImageView fitHeight="102.0" fitWidth="138.0" layoutX="425.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../bundles/images/logo%20transparent.png" />
+            <Image url="@../../../../../resources/images/logo%20transparent.png" />
          </image>
       </ImageView>
       <Hyperlink fx:id="websiteLink" layoutX="245.0" layoutY="223.0" onAction="#openWebsite" text="%website" />

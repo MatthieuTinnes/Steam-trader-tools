@@ -30,12 +30,12 @@ public class CSVImportTool
             stage.initStyle(StageStyle.UNDECORATED);
             ResourceBundle bundle = I18n.getResourceBundle();
             ImportFromCSVLoadingController importFromCSVLoadingController = new ImportFromCSVLoadingController();
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/matthieu42/steamtradertools/view/importfromcsvloadingview.fxml"), bundle);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/importfromcsvloadingview.fxml"), bundle);
             loader.setController(importFromCSVLoadingController);
             AnchorPane root;
             root = loader.load();
             Scene loading = new Scene(root);
-            String css = AppController.class.getResource("/com/matthieu42/steamtradertools/view/style.css").toExternalForm();
+            String css = AppController.class.getResource("/view/style.css").toExternalForm();
             loading.getStylesheets().add(css);
             stage.setScene(loading);
             stage.show();

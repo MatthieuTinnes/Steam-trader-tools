@@ -90,7 +90,7 @@
                <graphic>
                   <ImageView fx:id="searchGraphic" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../bundles/images/magnify.png" />
+                        <Image url="@../images/magnify.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -126,7 +126,7 @@
                <graphic>
                   <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../bundles/images/plus.png" />
+                        <Image url="@../images/plus.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -159,7 +159,7 @@
                      <graphic>
                         <ImageView accessibleText="%copyclipboard" fitHeight="33.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../bundles/images/plus-circle-outline.png" />
+                              <Image url="@../images/plus-circle-outline.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -168,7 +168,7 @@
                      <graphic>
                         <ImageView accessibleText="%copyclipboard" fitHeight="33.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../bundles/images/content-copy.png" />
+                              <Image url="@../images/content-copy.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -177,7 +177,7 @@
                      <graphic>
                         <ImageView fitHeight="33.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../bundles/images/delete.png" />
+                              <Image url="@../images/delete.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -223,7 +223,7 @@
                      <graphic>
                         <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../bundles/images/store_steampowered_com.png" />
+                              <Image url="@../images/store_steampowered_com.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -239,7 +239,7 @@
                      <graphic>
                         <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../bundles/images/steamdb.png" />
+                              <Image url="@../images/steamdb.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -255,7 +255,7 @@
                      <graphic>
                         <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../bundles/images/itad.png" />
+                              <Image url="@../images/itad.png" />
                            </image>
                         </ImageView>
                      </graphic>

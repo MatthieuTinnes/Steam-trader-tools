@@ -1,17 +1,17 @@
 #closeButton{
-	-fx-graphic: url('../bundles/images/close24.png');
+	-fx-graphic: url('../images/close24.png');
 }
 #deleteButton{
-	-fx-graphic: url('../bundles/images/delete24.png');
+	-fx-graphic: url('../images/delete24.png');
 }
 #maximizeButton{
-	-fx-graphic: url('../bundles/images/window-maximize.png');
+	-fx-graphic: url('../images/window-maximize.png');
 }
 #minimizeButton{
-	-fx-graphic: url('../bundles/images/window-minimize.png');
+	-fx-graphic: url('../images/window-minimize.png');
 }
 #filterButton{
-    -fx-graphic: url('../bundles/images/filter.png');
+    -fx-graphic: url('../images/filter.png');
 }
 .toolbar
 {
