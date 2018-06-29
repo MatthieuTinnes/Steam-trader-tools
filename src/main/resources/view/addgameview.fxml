@@ -13,13 +13,13 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="458.0" prefWidth="616.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="458.0" prefWidth="616.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <JFXListView fx:id="listResult" layoutX="113.0" layoutY="124.0" prefHeight="198.0" prefWidth="400.0" stylesheets="@style.css" />
       <JFXButton contentDisplay="GRAPHIC_ONLY" layoutX="368.0" layoutY="99.0" stylesheets="@style.css" text="Button" />
       <JFXToolbar layoutX="113.0" layoutY="69.0" prefHeight="30.0" prefWidth="400.0" styleClass="toolbar" stylesheets="@style.css">
          <center>
-            <JFXTextField fx:id="searchText" focusColor="WHITE" onKeyReleased="#search" promptText="%gamesearchprompt" style="-fx-text-fill: #FFFFFF;" unFocusColor="#ffffff00" BorderPane.alignment="CENTER" />
+            <JFXTextField fx:id="searchText" focusColor="WHITE" onKeyReleased="#search" promptText="%gamesearchprompt" styleClass="textArea" stylesheets="@style.css" unFocusColor="#ffffff00" BorderPane.alignment="CENTER" />
          </center>
          <right>
             <JFXButton buttonType="RAISED" contentDisplay="GRAPHIC_ONLY" onAction="#search" ripplerFill="WHITE" BorderPane.alignment="CENTER">
