@@ -207,7 +207,7 @@ public class UserAppList
     {
         StringBuilder list = new StringBuilder();
         for (AbstractSteamAppWithKey a : appList){
-            list.append("-");
+            list.append("- ");
             if(a instanceof LinkedSteamAppWithKey){
             list.append("[");
             list.append(a.getName());

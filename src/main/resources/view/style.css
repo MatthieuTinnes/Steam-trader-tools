@@ -45,9 +45,10 @@
 {
     -fx-background-color:#D5DEE0;
 }
-.textArea
+.textArea .jfx-text-field
 {
     -fx-text-fill: white;
+	-fx-text-inner-color: white;
 }
 
 .jfx-snackbar-content
