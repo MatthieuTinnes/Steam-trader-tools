@@ -1,6 +1,6 @@
 # Steam Trader Tools
 
-https://steam-trader-tools.matthieu42.fr/
+https://steam-trader-tools.matthieu.ga/
 
 Library used :
 https://github.com/jfoenixadmin/JFoenix
